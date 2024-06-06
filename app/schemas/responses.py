@@ -24,4 +24,4 @@ class UserResponse(BaseResponse):
     birth_date: date 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
