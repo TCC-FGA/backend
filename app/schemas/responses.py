@@ -22,6 +22,7 @@ class UserResponse(BaseResponse):
     monthly_income: float
     cpf: str
     birth_date: date 
+    name: str
 
     class Config:
         from_attributes = True
