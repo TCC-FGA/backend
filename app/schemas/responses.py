@@ -1,6 +1,6 @@
 from datetime import date
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
-from typing import List
+from typing import List, Optional
 
 
 class BaseResponse(BaseModel):
@@ -19,7 +19,7 @@ class UserResponse(BaseResponse):
     user_id: str
     email: EmailStr
     telephone: str
-    monthly_income: float
+    hashed_signature: Optional[str]
     cpf: str
     birth_date: date 
     name: str

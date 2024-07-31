@@ -182,7 +182,7 @@ async def register_new_user(
                 hashed_password=get_password_hash(new_user.password),
                 name=new_user.name,
                 telephone=new_user.telephone,
-                monthly_income=new_user.monthly_income,
+                hashed_signature=new_user.hashed_signature,
                 cpf=new_user.cpf,
                 birth_date=new_user.birth_date,
             )

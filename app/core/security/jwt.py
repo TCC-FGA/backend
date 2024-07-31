@@ -58,3 +58,52 @@ def verify_jwt_token(token: str) -> JWTTokenPayload:
         )
 
     return JWTTokenPayload(**raw_payload)
+
+def generate_reset_token(email: str) -> str:
+    iat = int(time.time())
+    exp = iat + get_settings().security.jwt_access_token_expire_secs
+
+    token_payload = {
+        "iss": get_settings().security.jwt_issuer,
+        "sub": email,
+        "exp": exp,
+        "iat": iat,
+        "type": "reset_password"
+    }
+
+    reset_token = jwt.encode(
+        token_payload,
+        key=get_settings().security.jwt_secret_key.get_secret_value(),
+        algorithm=JWT_ALGORITHM,
+    )
+
+    return reset_token
+
+def verify_reset_token(token: str) -> str:
+    try:
+        raw_payload = jwt.decode(
+            token,
+            get_settings().security.jwt_secret_key.get_secret_value(),
+            algorithms=[JWT_ALGORITHM],
+            options={"verify_signature": True},
+            issuer=get_settings().security.jwt_issuer,
+        )
+
+        if raw_payload.get("type") != "reset_password":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token type"
+            )
+
+        return raw_payload["sub"]
+
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expired"
+        )
+    except jwt.InvalidTokenError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {e}"
+        )

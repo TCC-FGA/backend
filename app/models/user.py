@@ -21,7 +21,7 @@ class Owner(Base):
     email: Mapped[str] = mapped_column(String(256), nullable=False, unique=True, index=True)
     telephone: Mapped[str] = mapped_column(String(20), nullable=False)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    monthly_income: Mapped[float] = mapped_column(Float, nullable=False)
+    hashed_signature: Mapped[str] = mapped_column(String(128), nullable=True)
     birth_date: Mapped[date] = mapped_column(Date, nullable=False)
     cpf: Mapped[str] = mapped_column(String(11), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(128), nullable=False)
