@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime, date
 from enum import Enum
 
@@ -31,3 +31,28 @@ class UserCreateRequest(BaseRequest):
     hashed_signature: Optional[str]
     cpf: str
     birth_date: date
+
+class PropertyCreateRequest(BaseModel):
+    nickname: str
+    photo: Optional[str]
+    iptu: float
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[str]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
+
+
+class PropertyUpdateRequest(BaseModel):
+    nickname: Optional[str]
+    photo: Optional[str]
+    iptu: Optional[float]
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[str]
+    zip_code: Optional[str]
+    city: Optional[str]
+    state: Optional[str]

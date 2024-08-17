@@ -17,7 +17,7 @@ from app.core.security.password import (
     get_password_hash,
     verify_password,
 )
-from app.models.user import RefreshToken, Owner as User
+from app.models.models import RefreshToken, Owner as User
 from app.schemas.requests import RefreshTokenRequest, UserCreateRequest
 from app.schemas.responses import AccessTokenResponse, UserResponse
 

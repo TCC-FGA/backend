@@ -26,3 +26,21 @@ class UserResponse(BaseResponse):
 
     class Config:
         from_attributes = True
+
+
+class PropertyResponse(BaseModel):
+    id: int
+    nickname: str
+    photo: Optional[str]
+    iptu: float
+    owner_id: str
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[str]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
+
+    class Config:
+        from_attributes = True

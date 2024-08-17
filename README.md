@@ -60,6 +60,7 @@ DATABASE__DB=default_db
 docker-compose up -d
 
 ### Run Alembic migrations
+alembic revision --autogenerate -m "<mensagem>"
 alembic upgrade head
 ```
 

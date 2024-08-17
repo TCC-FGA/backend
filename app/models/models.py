@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, date
 
-from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, String, Uuid, func, Float, Date
+from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, String, Uuid, func, Float, Date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -26,6 +26,8 @@ class Owner(Base):
     cpf: Mapped[str] = mapped_column(String(11), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(128), nullable=False)
     refresh_tokens: Mapped[list["RefreshToken"]] = relationship(back_populates="user")
+
+    properties: Mapped[list["Properties"]] = relationship("Properties", back_populates="owner", cascade="all, delete-orphan")
     
 class RefreshToken(Base):
     __tablename__ = "refresh_token"
@@ -36,3 +38,21 @@ class RefreshToken(Base):
     exp: Mapped[int] = mapped_column(BigInteger, nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey("user_account.user_id", ondelete="CASCADE"))
     user: Mapped["Owner"] = relationship(back_populates="refresh_tokens")
+
+class Properties(Base):
+    __tablename__ = "properties"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nickname: Mapped[str] = mapped_column(String(100), nullable=False)
+    photo: Mapped[str] = mapped_column(String(256), nullable=True)
+    iptu: Mapped[float] = mapped_column(Float, nullable=False)
+    owner_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), ForeignKey('user_account.user_id'), nullable=False)
+    owner: Mapped["Owner"] = relationship("Owner", back_populates="properties")
+
+    # Atributos compostos para endereço
+    street: Mapped[str] = mapped_column(String(100), nullable=True)
+    neighborhood: Mapped[str] = mapped_column(String(100), nullable=True)
+    number: Mapped[str] = mapped_column(String(10), nullable=True)
+    zip_code: Mapped[str] = mapped_column(String(8), nullable=False)
+    city: Mapped[str] = mapped_column(String(100), nullable=True)
+    state: Mapped[str] = mapped_column(String(2), nullable=True)

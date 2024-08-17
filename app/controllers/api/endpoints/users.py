@@ -7,7 +7,7 @@ from app.controllers.api import api_messages
 from app.core.config import get_settings
 from app.core.security.jwt import generate_reset_token, verify_reset_token
 from app.core.security.password import get_password_hash
-from app.models.user import Owner as User
+from app.models.models import Owner as User
 from app.schemas.requests import UserUpdatePasswordRequest, PasswordResetRequest, PasswordResetConfirmRequest
 from app.schemas.responses import UserResponse
 import requests

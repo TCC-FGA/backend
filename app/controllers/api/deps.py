@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.controllers.api import api_messages
 from app.core import database_session
 from app.core.security.jwt import verify_jwt_token
-from app.models.user import Owner
+from app.models.models import Owner
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/access-token")
 
