@@ -1,5 +1,5 @@
-# simulation_back-end
-Repositório dedicado a simulação da arquitetura do back-end
+# back-end
+Repositório dedicado ao back-end
 
 ## Quickstart(how run)
 
