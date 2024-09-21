@@ -12,6 +12,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      SECURITY__JWT_SECRET_KEY: very-not-secret
+      DATABASE__HOSTNAME: localhost
+      DATABASE__PORT: 5432
+      DATABASE__DB: my_test_db
+      DATABASE__USERNAME: postgres
+      DATABASE__PASSWORD: postgres
+      DATABASE_URL: postgresql://postgres:postgres@localhost/my_test_db
+      SECURITY__EMAIL_HOST: ${{ secrets.SECURITY__EMAIL_HOST }}
+
     services:
       postgres_db:
         image: postgres:16
@@ -22,15 +32,6 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      SECURITY__JWT_SECRET_KEY: very-not-secret
-      DATABASE__HOSTNAME: localhost
-      DATABASE__PORT: 5432
-      DATABASE__DB: my_test_db
-      DATABASE__USERNAME: postgres
-      DATABASE__PASSWORD: postgres
-      DATABASE_URL: postgresql://postgres:postgres@localhost/my_test_db
 
     steps:
     - name: Checkout code
