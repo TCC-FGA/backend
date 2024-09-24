@@ -8,6 +8,7 @@ from app.core.config import get_settings
 from app.core.security.jwt import generate_reset_token, verify_reset_token
 from app.core.security.password import get_password_hash
 from app.models.models import Owner as User
+from app.schemas.map_responses import map_user_to_response
 from app.schemas.requests import UserUpdatePasswordRequest, PasswordResetRequest, PasswordResetConfirmRequest
 from app.schemas.responses import UserResponse
 import requests
@@ -18,8 +19,8 @@ router = APIRouter()
 @router.get("/me", response_model=UserResponse, description="Get current user")
 async def read_current_user(
     current_user: User = Depends(deps.get_current_user),
-) -> User:
-    return current_user
+) -> UserResponse:
+    return map_user_to_response(current_user)
 
 
 @router.delete(
@@ -45,7 +46,7 @@ async def reset_current_user_password(
     session: AsyncSession = Depends(deps.get_session),
     current_user: User = Depends(deps.get_current_user),
 ) -> None:
-    current_user.hashed_password = get_password_hash(user_update_password.password)
+    current_user.senha_hash = get_password_hash(user_update_password.password)
     session.add(current_user)
     await session.commit()
 
@@ -56,10 +57,8 @@ async def forgot_password(
     session: AsyncSession = Depends(deps.get_session)
 ):
     try:
-        user = await session.execute(
-            select(User).where(User.email == request.email)
-        )
-        user = user.scalars().first()
+        result = await session.execute(select(User).where(User.email == request.email))
+        user = result.scalars().first()
 
         if not user:
             return {"detail": "Se um usuário com este email existir, um link para redefinição de senha será enviado."}
@@ -103,15 +102,15 @@ async def reset_password(
                 detail="Token inválido ou expirado"
             )
 
-        user = await session.execute(
+        result = await session.execute(
             select(User).where(User.email == email)
         )
-        user = user.scalars().first()
+        user = result.scalars().first()
 
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado")
 
-        user.hashed_password = get_password_hash(request.new_password)
+        user.senha_hash = get_password_hash(request.new_password)
         session.add(user)
         await session.commit()
 

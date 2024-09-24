@@ -18,6 +18,7 @@ async def test_register_new_user_status_code(
         json={
             "email": "test@email.com",
             "password": "testtesttest",
+            "photo": "photo",
             "name": "Test User",
             "telephone": "1234567890",
             "hashed_signature": "hashed_signature",
@@ -38,6 +39,7 @@ async def test_register_new_user_creates_record_in_db(
         json={
             "email": "test@email.com",
             "password": "testtesttest",
+            "photo": "photo",
             "name": "Test User",
             "telephone": "1234567890",
             "cpf": "12345678901",
@@ -58,12 +60,13 @@ async def test_register_new_user_cannot_create_already_created_user(
 ) -> None:
     user = User(
         email="test@email.com",
-        hashed_password="hashedpassword",
-        name="Test User",
-        telephone="1234567890",
+        senha_hash="hashedpassword",
+        nome="Test User",
+        foto="photo",
+        telefone="1234567890",
         cpf="12345678901",
-        hashed_signature="hashed_signature",
-        birth_date=date(1990, 1, 1),
+        assinatura_hash="hashed_signature",
+        data_nascimento=date(1990, 1, 1),
     )
     session.add(user)
     await session.commit()
@@ -74,6 +77,7 @@ async def test_register_new_user_cannot_create_already_created_user(
             "email": "test@email.com",
             "password": "testtesttest",
             "name": "Test User",
+            "photo": "photo",
             "telephone": "1234567890",
             "cpf": "12345678901",
             "birth_date": "1990-01-01",

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.controllers.api import api_messages
-from app.controllers.api.endpoints import auth, users, properties
+from app.controllers.api.endpoints import auth, users, properties, houses
 
 auth_router = APIRouter()
 auth_router.include_router(auth.router, prefix="/auth", tags=["auth"])
@@ -33,3 +33,4 @@ api_router = APIRouter(
 )
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(properties.router, tags=["properties"])
+api_router.include_router(houses.router, tags=["houses"])

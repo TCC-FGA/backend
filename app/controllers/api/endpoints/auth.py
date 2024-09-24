@@ -18,6 +18,7 @@ from app.core.security.password import (
     verify_password,
 )
 from app.models.models import RefreshToken, Owner as User
+from app.schemas.map_responses import map_user_to_response
 from app.schemas.requests import RefreshTokenRequest, UserCreateRequest
 from app.schemas.responses import AccessTokenResponse, UserResponse
 
@@ -82,7 +83,7 @@ async def login_access_token(
             detail=api_messages.PASSWORD_INVALID,
         )
 
-    if not verify_password(form_data.password, user.hashed_password):
+    if not verify_password(form_data.password, user.senha_hash):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=api_messages.PASSWORD_INVALID,
@@ -168,7 +169,7 @@ async def refresh_token(
 async def register_new_user(
     new_user: UserCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
-) -> User:
+) -> UserResponse:
     user = await session.scalar(select(User).where(User.email == new_user.email))
     if user is not None:
         raise HTTPException(
@@ -179,12 +180,12 @@ async def register_new_user(
     try:
         user = User(
                 email=new_user.email,
-                hashed_password=get_password_hash(new_user.password),
-                name=new_user.name,
-                telephone=new_user.telephone,
-                hashed_signature=new_user.hashed_signature,
+                senha_hash=get_password_hash(new_user.password),
+                nome=new_user.name,
+                telefone=new_user.telephone,
+                assinatura_hash=new_user.hashed_signature,
                 cpf=new_user.cpf,
-                birth_date=new_user.birth_date,
+                data_nascimento=new_user.birth_date,
             )
         
         session.add(user)
@@ -201,4 +202,4 @@ async def register_new_user(
             detail="EMAIL_ADDRESS_ALREADY_USED",
         )
     
-    return user
+    return map_user_to_response(user)

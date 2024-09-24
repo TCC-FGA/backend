@@ -23,6 +23,7 @@ class UserResponse(BaseResponse):
     cpf: str
     birth_date: date 
     name: str
+    photo: Optional[str]
 
     class Config:
         from_attributes = True
@@ -37,10 +38,23 @@ class PropertyResponse(BaseModel):
 
     street: Optional[str]
     neighborhood: Optional[str]
-    number: Optional[str]
+    number: Optional[int]
     zip_code: str
     city: Optional[str]
     state: Optional[str]
 
+    class Config:
+        from_attributes = True
+
+class HouseResponse(BaseModel):
+    id: int
+    property_id: int
+    photo: Optional[str]
+    nickname: str
+    room_count: int
+    bathrooms: int
+    furnished: bool
+    status: str
+    
     class Config:
         from_attributes = True
