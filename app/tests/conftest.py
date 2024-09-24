@@ -132,12 +132,12 @@ async def fixture_default_user(
     default_user = User(
         user_id=default_user_id,
         email=default_user_email,
-        hashed_password=default_hashed_password,
-        name=default_user_name,
-        telephone=default_user_telephone,
-        hashed_signature="hashed_signature",
+        senha_hash=default_hashed_password,
+        nome=default_user_name,
+        telefone=default_user_telephone,
+        assinatura_hash="hashed_signature",
         cpf=default_user_cpf,
-        birth_date=default_user_birth_date,
+        data_nascimento=default_user_birth_date,
     )
     session.add(default_user)
     await session.commit()

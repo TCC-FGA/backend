@@ -75,13 +75,13 @@ async def test_register_new_user_cannot_create_already_created_user(
         app.url_path_for("register_new_user"),
         json={
             "email": "test@email.com",
-            "senha_hash": "testtesttest",
-            "nome": "Test User",
-            "foto": "photo",
-            "telefone": "1234567890",
+            "password": "testtesttest",
+            "name": "Test User",
+            "photo": "photo",
+            "telephone": "1234567890",
             "cpf": "12345678901",
-            "data_nascimento": "1990-01-01",
-            "assinatura_hash": "hashed_signature",
+            "birth_date": "1990-01-01",
+            "hashed_signature": "hashed_signature",
         },
     )
 
