@@ -18,12 +18,12 @@ class AccessTokenResponse(BaseResponse):
 class UserResponse(BaseResponse):
     user_id: str
     email: EmailStr
-    foto: Optional[str]
-    telefone: str
-    assinatura_hash: Optional[str]
+    telephone: str
+    hashed_signature: Optional[str]
     cpf: str
-    data_nascimento: date 
-    nome: str
+    birth_date: date 
+    name: str
+    photo: Optional[str]
 
     class Config:
         from_attributes = True
@@ -31,29 +31,29 @@ class UserResponse(BaseResponse):
 
 class PropertyResponse(BaseModel):
     id: int
-    apelido: str
-    foto: Optional[str]
+    nickname: str
+    photo: Optional[str]
     iptu: float
-    user_id: str
+    owner_id: str
 
-    rua: Optional[str]
-    bairro: Optional[str]
-    numero: Optional[int]
-    cep: str
-    cidade: Optional[str]
-    estado: Optional[str]
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
 
     class Config:
         from_attributes = True
 
 class HouseResponse(BaseModel):
     id: int
-    propriedade_id: int
-    foto: Optional[str]
-    apelido: str
-    qtd_comodos: int
-    banheiros: int
-    mobiliada: bool
+    property_id: int
+    photo: Optional[str]
+    nickname: str
+    room_count: int
+    bathrooms: int
+    furnished: bool
     status: str
     
     class Config:

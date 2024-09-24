@@ -18,6 +18,7 @@ from app.core.security.password import (
     verify_password,
 )
 from app.models.models import RefreshToken, Owner as User
+from app.schemas.map_responses import map_user_to_response
 from app.schemas.requests import RefreshTokenRequest, UserCreateRequest
 from app.schemas.responses import AccessTokenResponse, UserResponse
 
@@ -168,7 +169,7 @@ async def refresh_token(
 async def register_new_user(
     new_user: UserCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
-) -> User:
+) -> UserResponse:
     user = await session.scalar(select(User).where(User.email == new_user.email))
     if user is not None:
         raise HTTPException(
@@ -201,4 +202,4 @@ async def register_new_user(
             detail="EMAIL_ADDRESS_ALREADY_USED",
         )
     
-    return user
+    return map_user_to_response(user)

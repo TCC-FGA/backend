@@ -6,6 +6,7 @@ from app.controllers.api import deps
 from app.models.models import Houses
 from app.models.models import Properties
 from app.models.models import Owner as User
+from app.schemas.map_responses import map_house_to_response
 from app.schemas.requests import HouseCreateRequest
 from app.schemas.responses import HouseResponse
 
@@ -49,7 +50,7 @@ async def create_house(
     await session.commit()
     await session.refresh(new_house)
 
-    return new_house
+    return map_house_to_response(new_house)
 
 @router.get(
     "/houses",
@@ -65,5 +66,5 @@ async def get_houses(
     )
     houses = result.scalars().all()
 
-    return houses
+    return [map_house_to_response(house) for house in houses]
 

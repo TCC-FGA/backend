@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.controllers.api import deps
 from app.models.models import Properties
 from app.models.models import Owner as User
+from app.schemas.map_responses import map_property_to_response
 from app.schemas.requests import PropertyCreateRequest, PropertyUpdateRequest
 from app.schemas.responses import PropertyResponse
 
@@ -40,7 +41,7 @@ async def create_property(
     await session.commit()
     await session.refresh(new_property)
 
-    return new_property
+    return map_property_to_response(new_property)
 
 @router.patch(
     "/properties/{property_id}",
@@ -61,21 +62,22 @@ async def update_property(
     if not existing_property:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Property not found")
 
-    existing_property.apelido = property_data.nickname
-    existing_property.foto = property_data.photo
-    existing_property.iptu = property_data.iptu
-    existing_property.rua = property_data.street
-    existing_property.bairro = property_data.neighborhood
-    existing_property.numero = property_data.number
-    existing_property.cep = property_data.zip_code
-    existing_property.cidade = property_data.city
-    existing_property.estado = property_data.state
+    existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido
+    existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido
+    existing_property.foto = property_data.photo if property_data.photo is not None else existing_property.foto
+    existing_property.iptu = property_data.iptu if property_data.iptu is not None else existing_property.iptu
+    existing_property.rua = property_data.street if property_data.street is not None else existing_property.rua
+    existing_property.bairro = property_data.neighborhood if property_data.neighborhood is not None else existing_property.bairro
+    existing_property.numero = int(property_data.number) if property_data.number is not None else existing_property.numero
+    existing_property.cep = property_data.zip_code if property_data.zip_code is not None else existing_property.cep
+    existing_property.cidade = property_data.city if property_data.city is not None else existing_property.cidade
+    existing_property.estado = property_data.state if property_data.state is not None else existing_property.estado
 
     session.add(existing_property)
     await session.commit()
     await session.refresh(existing_property)
 
-    return existing_property
+    return map_property_to_response(existing_property)
 
 
 @router.get(
@@ -91,7 +93,7 @@ async def get_properties(
         select(Properties).where(Properties.user_id == current_user.user_id)
     )
     properties = result.scalars().all()
-    return properties
+    return [map_property_to_response(property) for property in properties]
 
 
 @router.delete(
