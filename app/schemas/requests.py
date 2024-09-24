@@ -1,4 +1,5 @@
 from typing import Optional
+from fastapi import File, Form, UploadFile
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime, date
 from enum import Enum
@@ -34,16 +35,41 @@ class UserCreateRequest(BaseRequest):
     birth_date: date
 
 class PropertyCreateRequest(BaseModel):
-    nickname: str
-    photo: Optional[str]
-    iptu: float
+    
+    nickname: str = Form(...)
+    photo: UploadFile = File(None)
+    iptu: float = Form(...)
+    street: Optional[str] = Form(None)
+    neighborhood: Optional[str] = Form(None)
+    number: Optional[str] = Form(None)
+    zip_code: str = Form(...)
+    city: Optional[str] = Form(None)
+    state: Optional[str] = Form(None)
 
-    street: Optional[str]
-    neighborhood: Optional[str]
-    number: Optional[int]
-    zip_code: str
-    city: Optional[str]
-    state: Optional[str]
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(...),
+        iptu: float = Form(...),
+        photo: UploadFile = File(None),
+        street: Optional[str] = Form(None),
+        neighborhood: Optional[str] = Form(None),
+        number: Optional[str] = Form(None),
+        zip_code: str = Form(...),
+        city: Optional[str] = Form(None),
+        state: Optional[str] = Form(None),
+    ):
+        return cls(
+            nickname=nickname,
+            iptu=iptu,
+            photo=photo,
+            street=street,
+            neighborhood=neighborhood,
+            number=number,
+            zip_code=zip_code,
+            city=city,
+            state=state,
+        )
 
 
 class PropertyUpdateRequest(BaseModel):
@@ -64,9 +90,28 @@ class HouseStatus(str, Enum):
     reforma = "reforma"
 
 class HouseCreateRequest(BaseModel):
-    nickname: str
-    rooms: int
-    foto: Optional[str]
-    bathrooms: int
-    furnished: bool = False
-    status: HouseStatus
+    nickname: str = Form(...)
+    rooms: int = Form(...)
+    photo: UploadFile = File(None)
+    bathrooms: int = Form(...)
+    furnished: bool = Form(False)
+    status: HouseStatus = Form(...)
+
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(...),
+        rooms: int = Form(...),
+        photo: UploadFile = File(None),
+        bathrooms: int = Form(...),
+        furnished: bool = Form(False),
+        status: HouseStatus = Form(...),
+    ):
+        return cls(
+            nickname=nickname,
+            rooms=rooms,
+            photo=photo,
+            bathrooms=bathrooms,
+            furnished=furnished,
+            status=status,
+        )

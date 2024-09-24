@@ -8,6 +8,7 @@ from app.models.models import Owner as User
 from app.schemas.map_responses import map_property_to_response
 from app.schemas.requests import PropertyCreateRequest, PropertyUpdateRequest
 from app.schemas.responses import PropertyResponse
+from app.storage.gcs import GCStorage
 
 
 router = APIRouter()
@@ -20,14 +21,16 @@ router = APIRouter()
     description="Create a new property with an address"
 )
 async def create_property(
-    property_data: PropertyCreateRequest,
+    property_data: PropertyCreateRequest = Depends(PropertyCreateRequest.as_form),
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
 ) -> PropertyResponse:
+    
+    file_path = GCStorage().upload_file(property_data.photo)
 
     new_property = Properties(
         apelido=property_data.nickname,
-        foto=property_data.photo,
+        foto=str(file_path),
         iptu=property_data.iptu,
         user_id=current_user.user_id,
         rua=property_data.street,

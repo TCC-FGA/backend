@@ -17,6 +17,7 @@ class Security(BaseModel):
     allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
     backend_cors_origins: list[AnyHttpUrl] = []
     email_host: SecretStr
+    service_account: SecretStr
 
 
 class Database(BaseModel):
