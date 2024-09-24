@@ -25,16 +25,16 @@ async def create_property(
 ) -> PropertyResponse:
 
     new_property = Properties(
-        nickname=property_data.nickname,
-        photo=property_data.photo,
+        apelido=property_data.nickname,
+        foto=property_data.photo,
         iptu=property_data.iptu,
-        owner_id=current_user.user_id,
-        street=property_data.street,
-        neighborhood=property_data.neighborhood,
-        number=property_data.number,
-        zip_code=property_data.zip_code,
-        city=property_data.city,
-        state=property_data.state
+        user_id=current_user.user_id,
+        rua=property_data.street,
+        bairro=property_data.neighborhood,
+        numero=property_data.number,
+        cep=property_data.zip_code,
+        cidade=property_data.city,
+        estado=property_data.state
     )
     session.add(new_property)
     await session.commit()
@@ -55,21 +55,21 @@ async def update_property(
 ) -> PropertyResponse:
 
     result = await session.execute(
-        select(Properties).where(Properties.id == property_id, Properties.owner_id == current_user.user_id)
+        select(Properties).where(Properties.id == property_id, Properties.user_id == current_user.user_id)
     )
     existing_property = result.scalar_one_or_none()
     if not existing_property:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Property not found")
 
-    existing_property.nickname = property_data.nickname
-    existing_property.photo = property_data.photo
+    existing_property.apelido = property_data.nickname
+    existing_property.foto = property_data.photo
     existing_property.iptu = property_data.iptu
-    existing_property.street = property_data.street
-    existing_property.neighborhood = property_data.neighborhood
-    existing_property.number = property_data.number
-    existing_property.zip_code = property_data.zip_code
-    existing_property.city = property_data.city
-    existing_property.state = property_data.state
+    existing_property.rua = property_data.street
+    existing_property.bairro = property_data.neighborhood
+    existing_property.numero = property_data.number
+    existing_property.cep = property_data.zip_code
+    existing_property.cidade = property_data.city
+    existing_property.estado = property_data.state
 
     session.add(existing_property)
     await session.commit()
@@ -88,7 +88,7 @@ async def get_properties(
     session: AsyncSession = Depends(deps.get_session),
 ) -> list[PropertyResponse]:
     result = await session.execute(
-        select(Properties).where(Properties.owner_id == current_user.user_id)
+        select(Properties).where(Properties.user_id == current_user.user_id)
     )
     properties = result.scalars().all()
     return properties
@@ -105,7 +105,7 @@ async def delete_property(
     session: AsyncSession = Depends(deps.get_session),
 ) -> None:
     result = await session.execute(
-        select(Properties).where(Properties.id == property_id, Properties.owner_id == current_user.user_id)
+        select(Properties).where(Properties.id == property_id, Properties.user_id == current_user.user_id)
     )
     existing_property = result.scalar_one_or_none()
     if not existing_property:

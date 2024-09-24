@@ -25,10 +25,11 @@ class PasswordResetConfirmRequest(BaseModel):
 
 class UserCreateRequest(BaseRequest):
     email: EmailStr
+    photo: Optional[str]
     password: str
     name: str
     telephone: str
-    hashed_signature: Optional[str]
+    hashed_signature: Optional[str] = None
     cpf: str
     birth_date: date
 
@@ -39,7 +40,7 @@ class PropertyCreateRequest(BaseModel):
 
     street: Optional[str]
     neighborhood: Optional[str]
-    number: Optional[str]
+    number: Optional[int]
     zip_code: str
     city: Optional[str]
     state: Optional[str]
@@ -56,3 +57,16 @@ class PropertyUpdateRequest(BaseModel):
     zip_code: Optional[str]
     city: Optional[str]
     state: Optional[str]
+
+class HouseStatus(str, Enum):
+    alugada = "alugada"
+    vaga = "vaga"
+    reforma = "reforma"
+
+class HouseCreateRequest(BaseModel):
+    nickname: str
+    rooms: int
+    foto: Optional[str]
+    bathrooms: int
+    furnished: bool = False
+    status: HouseStatus
