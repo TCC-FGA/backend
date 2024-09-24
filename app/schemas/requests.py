@@ -41,7 +41,7 @@ class PropertyCreateRequest(BaseModel):
     iptu: float = Form(...)
     street: Optional[str] = Form(None)
     neighborhood: Optional[str] = Form(None)
-    number: Optional[str] = Form(None)
+    number: Optional[int] = Form(None)
     zip_code: str = Form(...)
     city: Optional[str] = Form(None)
     state: Optional[str] = Form(None)
@@ -54,7 +54,7 @@ class PropertyCreateRequest(BaseModel):
         photo: UploadFile = File(None),
         street: Optional[str] = Form(None),
         neighborhood: Optional[str] = Form(None),
-        number: Optional[str] = Form(None),
+        number: Optional[int] = Form(None),
         zip_code: str = Form(...),
         city: Optional[str] = Form(None),
         state: Optional[str] = Form(None),

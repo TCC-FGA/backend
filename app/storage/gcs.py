@@ -7,8 +7,19 @@ from app.core.config import get_settings
 
 class GCStorage:
     def __init__(self):
-
-        self.storage_client = storage.Client.from_service_account_info(json.loads(get_settings().security.service_account.get_secret_value().strip("'")))
+        
+        self.storage_client = storage.Client.from_service_account_info({
+            "type": "service_account",
+            "project_id": get_settings().security.service_account_project_id,
+            "private_key_id": get_settings().security.service_account_private_key_id,
+            "private_key": get_settings().security.service_account_private_key.get_secret_value(),
+            "client_email": get_settings().security.service_account_client_email,
+            "client_id": get_settings().security.service_account_client_id,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": get_settings().security.auth_provider_x509_cert_url,
+            "client_x509_cert_url": get_settings().security.client_x509_cert_url
+        })
         self.bucket_name = 'e-aluguel'
         self.date = str(date.today())
         self.unique_id = uuid.uuid4().hex
