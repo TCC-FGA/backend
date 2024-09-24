@@ -38,7 +38,7 @@ class PropertyResponse(BaseModel):
 
     street: Optional[str]
     neighborhood: Optional[str]
-    number: Optional[int]
+    number: Optional[str]
     zip_code: str
     city: Optional[str]
     state: Optional[str]

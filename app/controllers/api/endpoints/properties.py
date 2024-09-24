@@ -25,17 +25,18 @@ async def create_property(
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
 ) -> PropertyResponse:
-    
-    file_path = GCStorage().upload_file(property_data.photo)
+    file_path = None
+    if property_data.photo is not None:
+        file_path = GCStorage().upload_file(property_data.photo)
 
     new_property = Properties(
         apelido=property_data.nickname,
-        foto=str(file_path),
+        foto=file_path,
         iptu=property_data.iptu,
         user_id=current_user.user_id,
         rua=property_data.street,
         bairro=property_data.neighborhood,
-        numero=property_data.number,
+        numero=int(property_data.number) if property_data.number is not None else None,
         cep=property_data.zip_code,
         cidade=property_data.city,
         estado=property_data.state

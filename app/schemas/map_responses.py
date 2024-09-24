@@ -11,7 +11,7 @@ def map_property_to_response(property: Properties) -> PropertyResponse:
         owner_id=property.user_id,
         street=property.rua, 
         neighborhood=property.bairro,
-        number=property.numero,
+        number=str(property.numero),
         zip_code=property.cep,
         city=property.cidade,
         state=property.estado,

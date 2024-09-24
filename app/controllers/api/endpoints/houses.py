@@ -38,11 +38,13 @@ async def create_house(
             detail="Usuário não tem permissão para acessar esta propriedade"
         )
     
-    file_path = GCStorage().upload_file(house_data.photo)
+    file_path = None
+    if house_data.photo is not None:
+        file_path = GCStorage().upload_file(house_data.photo)
     
     new_house = Houses(
         apelido=house_data.nickname,
-        foto=str(file_path),
+        foto=file_path,
         qtd_comodos=house_data.rooms,
         banheiros=house_data.bathrooms,
         mobiliada=house_data.furnished,

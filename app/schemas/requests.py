@@ -37,11 +37,11 @@ class UserCreateRequest(BaseRequest):
 class PropertyCreateRequest(BaseModel):
     
     nickname: str = Form(...)
-    photo: UploadFile = File(None)
+    photo: UploadFile | None = File(None)
     iptu: float = Form(...)
     street: Optional[str] = Form(None)
     neighborhood: Optional[str] = Form(None)
-    number: Optional[int] = Form(None)
+    number: Optional[str] = Form(None)
     zip_code: str = Form(...)
     city: Optional[str] = Form(None)
     state: Optional[str] = Form(None)
@@ -51,10 +51,10 @@ class PropertyCreateRequest(BaseModel):
         cls,
         nickname: str = Form(...),
         iptu: float = Form(...),
-        photo: UploadFile = File(None),
+        photo: UploadFile | None = File(None),
         street: Optional[str] = Form(None),
         neighborhood: Optional[str] = Form(None),
-        number: Optional[int] = Form(None),
+        number: Optional[str] = Form(None),
         zip_code: str = Form(...),
         city: Optional[str] = Form(None),
         state: Optional[str] = Form(None),
@@ -92,7 +92,7 @@ class HouseStatus(str, Enum):
 class HouseCreateRequest(BaseModel):
     nickname: str = Form(...)
     rooms: int = Form(...)
-    photo: UploadFile = File(None)
+    photo: UploadFile | None = File(None)
     bathrooms: int = Form(...)
     furnished: bool = Form(False)
     status: HouseStatus = Form(...)
@@ -102,7 +102,7 @@ class HouseCreateRequest(BaseModel):
         cls,
         nickname: str = Form(...),
         rooms: int = Form(...),
-        photo: UploadFile = File(None),
+        photo: UploadFile | None = File(None),
         bathrooms: int = Form(...),
         furnished: bool = Form(False),
         status: HouseStatus = Form(...),
