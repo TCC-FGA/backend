@@ -71,10 +71,9 @@ class PropertyCreateRequest(BaseModel):
             state=state,
         )
 
-
 class PropertyUpdateRequest(BaseModel):
     nickname: Optional[str]
-    photo: Optional[str]
+    photo: UploadFile | None = File(None)
     iptu: Optional[float]
 
     street: Optional[str]
@@ -84,6 +83,31 @@ class PropertyUpdateRequest(BaseModel):
     city: Optional[str]
     state: Optional[str]
 
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(None),
+        photo: UploadFile | None = File(None),
+        iptu: float = Form(None),
+        street: str = Form(None),
+        neighborhood: str = Form(None),
+        number: str = Form(None),
+        zip_code: str = Form(None),
+        city: str = Form(None),
+        state: str = Form(None),
+    ):
+        return cls(
+            nickname=nickname,
+            photo=photo,
+            iptu=iptu,
+            street=street,
+            neighborhood=neighborhood,
+            number=number,
+            zip_code=zip_code,
+            city=city,
+            state=state,
+        )
+
 class HouseStatus(str, Enum):
     alugada = "alugada"
     vaga = "vaga"
@@ -91,7 +115,7 @@ class HouseStatus(str, Enum):
 
 class HouseCreateRequest(BaseModel):
     nickname: str = Form(...)
-    rooms: int = Form(...)
+    room_count: int = Form(...)
     photo: UploadFile | None = File(None)
     bathrooms: int = Form(...)
     furnished: bool = Form(False)
@@ -101,7 +125,7 @@ class HouseCreateRequest(BaseModel):
     def as_form(
         cls,
         nickname: str = Form(...),
-        rooms: int = Form(...),
+        room_count: int = Form(...),
         photo: UploadFile | None = File(None),
         bathrooms: int = Form(...),
         furnished: bool = Form(False),
@@ -109,7 +133,34 @@ class HouseCreateRequest(BaseModel):
     ):
         return cls(
             nickname=nickname,
-            rooms=rooms,
+            room_count=room_count,
+            photo=photo,
+            bathrooms=bathrooms,
+            furnished=furnished,
+            status=status,
+        )
+
+class HouseUpdateRequest(BaseModel):
+    nickname: Optional[str]
+    photo: UploadFile | None = File(None)
+    room_count: Optional[int]
+    bathrooms: Optional[int]
+    furnished: Optional[bool]
+    status: Optional[HouseStatus]
+
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(None),
+        room_count: int = Form(None),
+        photo: UploadFile | None = File(None),
+        bathrooms: int = Form(None),
+        furnished: bool = Form(False),
+        status: HouseStatus = Form(None),
+    ):
+        return cls(
+            nickname=nickname,
+            room_count=room_count,
             photo=photo,
             bathrooms=bathrooms,
             furnished=furnished,
