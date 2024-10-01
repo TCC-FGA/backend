@@ -36,7 +36,7 @@ async def create_property(
         user_id=current_user.user_id,
         rua=property_data.street,
         bairro=property_data.neighborhood,
-        numero=int(property_data.number) if property_data.number is not None else None,
+        numero=property_data.number if property_data.number is not None else None,
         cep=property_data.zip_code,
         cidade=property_data.city,
         estado=property_data.state
@@ -78,7 +78,7 @@ async def update_property(
     existing_property.iptu = property_data.iptu if property_data.iptu is not None else existing_property.iptu
     existing_property.rua = property_data.street if property_data.street is not None else existing_property.rua
     existing_property.bairro = property_data.neighborhood if property_data.neighborhood is not None else existing_property.bairro
-    existing_property.numero = int(property_data.number) if property_data.number is not None else existing_property.numero
+    existing_property.numero = property_data.number if property_data.number is not None else existing_property.numero
     existing_property.cep = property_data.zip_code if property_data.zip_code is not None else existing_property.cep
     existing_property.cidade = property_data.city if property_data.city is not None else existing_property.cidade
     existing_property.estado = property_data.state if property_data.state is not None else existing_property.estado

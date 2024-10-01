@@ -41,7 +41,7 @@ class PropertyCreateRequest(BaseModel):
     iptu: float = Form(...)
     street: Optional[str] = Form(None)
     neighborhood: Optional[str] = Form(None)
-    number: Optional[str] = Form(None)
+    number: Optional[int] = Form(None)
     zip_code: str = Form(...)
     city: Optional[str] = Form(None)
     state: Optional[str] = Form(None)
@@ -78,7 +78,7 @@ class PropertyUpdateRequest(BaseModel):
 
     street: Optional[str]
     neighborhood: Optional[str]
-    number: Optional[str]
+    number: Optional[int]
     zip_code: Optional[str]
     city: Optional[str]
     state: Optional[str]
@@ -166,3 +166,41 @@ class HouseUpdateRequest(BaseModel):
             furnished=furnished,
             status=status,
         )
+
+class TenantCreateRequest(BaseModel):
+    cpf: str
+    contact: str
+    email: Optional[str] = None
+    name: str
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    emergency_contact: Optional[str] = None
+    income: Optional[float] = None
+    residents: Optional[int] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: str
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+class TenantUpdateRequest(BaseModel):
+    cpf: Optional[str] = None
+    contact: Optional[str] = None
+    email: Optional[str] = None
+    name: Optional[str] = None
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    emergency_contact: Optional[str] = None
+    income: Optional[float] = None
+    residents: Optional[int] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None

@@ -3,6 +3,7 @@ from datetime import datetime, date
 
 from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, String, Uuid, func, Date, Enum, Text, Numeric
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.schema import UniqueConstraint
 
 
 class Base(DeclarativeBase):
@@ -36,6 +37,7 @@ class Owner(Base):
     refresh_tokens: Mapped[list["RefreshToken"]] = relationship(back_populates="user")
 
     propriedades: Mapped[list["Properties"]] = relationship("Properties", back_populates="proprietario", cascade="all, delete-orphan")
+    inquilino: Mapped[list["Tenant"]] = relationship("Tenant", back_populates="user", cascade="all, delete-orphan")
     
 class RefreshToken(Base):
     __tablename__ = "refresh_token"
@@ -106,7 +108,7 @@ class Tenant(Base, Address):
     __tablename__ = "inquilino"
     
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    cpf: Mapped[str] = mapped_column(String(11), nullable=False, unique=True, index=True)
+    cpf: Mapped[str] = mapped_column(String(11), nullable=False)
     contato: Mapped[str] = mapped_column(String(25), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=True)
     nome: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -117,5 +119,10 @@ class Tenant(Base, Address):
     renda: Mapped[float] = mapped_column(Numeric, nullable=True)
     num_residentes: Mapped[int] = mapped_column(Integer, nullable=True)
 
+    user_id: Mapped[str] = mapped_column(ForeignKey('conta_usuario.user_id'), nullable=False)
+    user: Mapped["Owner"] = relationship("Owner", back_populates="inquilino")
     fiador: Mapped[int] = relationship("Guarantor", back_populates="inquilino", cascade="all, delete-orphan")
-        
+    
+    __table_args__ = (
+        UniqueConstraint('cpf', 'user_id', name='uq_inquilino_cpf_user_id'),
+    )
