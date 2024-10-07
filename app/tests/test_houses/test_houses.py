@@ -60,18 +60,18 @@ async def test_update_house(
     default_user_headers: dict, 
     default_house: Houses
 ) -> None:
-    house = await default_house  # Aguardando a fixture async
+    house = default_house
 
     update_data = {
         "nickname": "Casa Atualizada",
-        "room_count": "4",  # Certifique-se que estes valores estão corretos para o form-data
+        "room_count": "4",
         "bathrooms": "3"
     }
 
     response = await client.patch(
         f"/houses/{house.id}",
         headers=default_user_headers,
-        data=update_data  # Usando 'data' para form-data
+        data=update_data
     )
     
     assert response.status_code == status.HTTP_200_OK
@@ -86,7 +86,7 @@ async def test_delete_house(
     default_user_headers: dict, 
     default_house: Houses
 ) -> None:
-    house = await default_house
+    house = default_house
 
     response = await client.delete(
         f"/houses/{house.id}",

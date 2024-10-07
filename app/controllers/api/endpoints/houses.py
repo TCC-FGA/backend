@@ -154,7 +154,7 @@ async def update_house(
     existing_house.qtd_comodos = house_data.room_count if house_data.room_count is not None else existing_house.qtd_comodos
     existing_house.banheiros = house_data.bathrooms if house_data.bathrooms is not None else existing_house.banheiros
     existing_house.mobiliada = house_data.furnished if house_data.furnished is not None else existing_house.mobiliada
-    existing_house.status = house_data.status if house_data.status is not None else existing_house.status
+    existing_house.status = house_data.status if house_data.status is not None else existing_house.status # type: ignore
 
     await session.commit()
     await session.refresh(existing_house)

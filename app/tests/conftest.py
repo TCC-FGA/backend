@@ -145,7 +145,7 @@ async def fixture_default_user(
     return default_user
 
 
-@pytest.fixture(name="default_user_headers", scope="function")
+@pytest_asyncio.fixture(name="default_user_headers", scope="function")
 def fixture_default_user_headers(default_user: User) -> dict[str, str]:
     return {"Authorization": f"Bearer {default_user_access_token}"}
 
@@ -170,7 +170,7 @@ async def fixture_default_property(session: AsyncSession, default_user: User) ->
 
     return property
 
-@pytest.fixture(name="default_house", scope="function")
+@pytest_asyncio.fixture(name="default_house", scope="function")
 async def fixture_default_house(session: AsyncSession, default_property: Properties) -> Houses:
     house = Houses(
         apelido = "Casa Teste",
@@ -188,7 +188,7 @@ async def fixture_default_house(session: AsyncSession, default_property: Propert
 
     return house
 
-@pytest.fixture(name="default_tenant", scope="function")
+@pytest_asyncio.fixture(name="default_tenant", scope="function")
 async def fixture_default_tenant(session: AsyncSession, default_property: Properties, default_user:User) -> Tenant:
     tenant = Tenant(
         cpf = "12345678900",

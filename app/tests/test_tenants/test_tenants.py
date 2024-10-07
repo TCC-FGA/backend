@@ -36,7 +36,7 @@ async def test_create_tenant(client: AsyncClient, default_user_headers: dict) ->
 
 @pytest.mark.asyncio
 async def test_update_tenant(client: AsyncClient, default_user_headers: dict, default_tenant: Tenant) -> None:
-    tenant_id = (await default_tenant).id
+    tenant_id = (default_tenant).id
     update_data = {
         "name": "Updated Tenant",
         "profession": "Updated Profession"
@@ -53,7 +53,7 @@ async def test_update_tenant(client: AsyncClient, default_user_headers: dict, de
 
 @pytest.mark.asyncio
 async def test_get_tenant(client: AsyncClient, default_user_headers: dict, default_tenant: Tenant) -> None:
-    tenant_id = (await default_tenant).id
+    tenant_id = (default_tenant).id
 
     response = await client.get(
         f"/tenants/{tenant_id}", headers=default_user_headers
@@ -65,7 +65,7 @@ async def test_get_tenant(client: AsyncClient, default_user_headers: dict, defau
 
 @pytest.mark.asyncio
 async def test_delete_tenant(client: AsyncClient, default_user_headers: dict, default_tenant: Tenant) -> None:
-    tenant_id = (await default_tenant).id
+    tenant_id = (default_tenant).id
 
     response = await client.delete(
         f"/tenants/{tenant_id}", headers=default_user_headers
