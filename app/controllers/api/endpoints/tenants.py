@@ -18,7 +18,8 @@ router = APIRouter()
 @router.get(
     "/tenants",
     response_model=list[TenantResponse],
-    description="Get all tenants for the current user"
+    description="Get all tenants for the current user",
+    status_code=status.HTTP_200_OK
 )
 async def get_tenants(
     current_user: User = Depends(deps.get_current_user),
@@ -41,7 +42,8 @@ async def get_tenants(
 @router.get(
     "/tenants/{tenant_id}",
     response_model=TenantResponse,
-    description="Get a tenant by its id"
+    description="Get a tenant by its id",
+    status_code=status.HTTP_200_OK
 )
 async def get_tenant(
     tenant_id: int,
@@ -64,7 +66,8 @@ async def get_tenant(
 @router.post(
     "/tenants",
     response_model=TenantResponse,
-    description="Create a new tenant"
+    description="Create a new tenant",
+    status_code=status.HTTP_201_CREATED
 )
 async def create_tenant(
     tenant_request: TenantCreateRequest,
@@ -114,7 +117,8 @@ async def create_tenant(
 @router.patch(
     "/tenants/{tenant_id}",
     response_model=TenantResponse,
-    description="Update a tenant"
+    description="Update a tenant",
+    status_code=status.HTTP_200_OK
 )
 async def update_tenant(
     tenant_id: int,
@@ -157,7 +161,8 @@ async def update_tenant(
 
 @router.delete(
     "/tenants/{tenant_id}",
-    description="Delete a tenant"
+    description="Delete a tenant",
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_tenant(
     tenant_id: int,
