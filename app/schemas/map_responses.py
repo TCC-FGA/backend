@@ -1,5 +1,5 @@
-from app.models.models import Houses, Properties, Owner
-from app.schemas.responses import HouseResponse, PropertyResponse, UserResponse
+from app.models.models import Houses, Properties, Owner, Tenant
+from app.schemas.responses import HouseResponse, PropertyResponse, UserResponse, TenantResponse
 
 
 def map_property_to_response(property: Properties) -> PropertyResponse:
@@ -11,7 +11,7 @@ def map_property_to_response(property: Properties) -> PropertyResponse:
         owner_id=property.user_id,
         street=property.rua, 
         neighborhood=property.bairro,
-        number=str(property.numero),
+        number=property.numero,
         zip_code=property.cep,
         city=property.cidade,
         state=property.estado,
@@ -39,4 +39,25 @@ def map_house_to_response(house: Houses) -> HouseResponse:
         bathrooms=house.banheiros,
         furnished=house.mobiliada,
         status=str(house.status),
+    )
+
+def map_tenant_to_response(tenant: Tenant) -> TenantResponse:
+    return TenantResponse(
+        id=tenant.id,
+        cpf=tenant.cpf,
+        contact=tenant.contato,
+        email=tenant.email,
+        name=tenant.nome,
+        profession=tenant.profissao,
+        marital_status=tenant.estado_civil,
+        birth_date=tenant.data_nascimento,
+        emergency_contact=tenant.contato_emergencia,
+        income=tenant.renda,
+        residents=tenant.num_residentes,
+        street=tenant.rua,
+        neighborhood=tenant.bairro,
+        number=tenant.numero,
+        zip_code=tenant.cep,
+        city=tenant.cidade,
+        state=tenant.estado,
     )

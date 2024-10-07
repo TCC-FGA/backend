@@ -38,7 +38,7 @@ class PropertyResponse(BaseModel):
 
     street: Optional[str]
     neighborhood: Optional[str]
-    number: Optional[str]
+    number: Optional[int]
     zip_code: str
     city: Optional[str]
     state: Optional[str]
@@ -58,3 +58,27 @@ class HouseResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+class TenantResponse(BaseModel):
+    id: int
+    cpf: str
+    contact: str
+    email: Optional[str]
+    name: str
+    profession: Optional[str]
+    marital_status: Optional[str]
+    birth_date: Optional[date]
+    emergency_contact: Optional[str]
+    income: Optional[float]
+    residents: Optional[int]
+    
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
+
+    class Config:
+        from_attributes = True
+    

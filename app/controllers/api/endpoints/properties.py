@@ -36,7 +36,7 @@ async def create_property(
         user_id=current_user.user_id,
         rua=property_data.street,
         bairro=property_data.neighborhood,
-        numero=int(property_data.number) if property_data.number is not None else None,
+        numero=property_data.number if property_data.number is not None else None,
         cep=property_data.zip_code,
         cidade=property_data.city,
         estado=property_data.state
@@ -54,7 +54,7 @@ async def create_property(
 )
 async def update_property(
     property_id: int,
-    property_data: PropertyUpdateRequest,
+    property_data: PropertyUpdateRequest = Depends(PropertyUpdateRequest.as_form),
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
 ) -> PropertyResponse:
@@ -63,16 +63,22 @@ async def update_property(
         select(Properties).where(Properties.id == property_id, Properties.user_id == current_user.user_id)
     )
     existing_property = result.scalar_one_or_none()
+
     if not existing_property:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Property not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found"
+        )
+
+    if property_data.photo is not None:
+        file_path = GCStorage().upload_file(property_data.photo)
+        existing_property.foto = file_path
 
     existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido
-    existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido
-    existing_property.foto = property_data.photo if property_data.photo is not None else existing_property.foto
     existing_property.iptu = property_data.iptu if property_data.iptu is not None else existing_property.iptu
     existing_property.rua = property_data.street if property_data.street is not None else existing_property.rua
     existing_property.bairro = property_data.neighborhood if property_data.neighborhood is not None else existing_property.bairro
-    existing_property.numero = int(property_data.number) if property_data.number is not None else existing_property.numero
+    existing_property.numero = property_data.number if property_data.number is not None else existing_property.numero
     existing_property.cep = property_data.zip_code if property_data.zip_code is not None else existing_property.cep
     existing_property.cidade = property_data.city if property_data.city is not None else existing_property.cidade
     existing_property.estado = property_data.state if property_data.state is not None else existing_property.estado

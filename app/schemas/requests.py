@@ -26,7 +26,7 @@ class PasswordResetConfirmRequest(BaseModel):
 
 class UserCreateRequest(BaseRequest):
     email: EmailStr
-    photo: Optional[str]
+    photo: Optional[str] = None
     password: str
     name: str
     telephone: str
@@ -41,7 +41,7 @@ class PropertyCreateRequest(BaseModel):
     iptu: float = Form(...)
     street: Optional[str] = Form(None)
     neighborhood: Optional[str] = Form(None)
-    number: Optional[str] = Form(None)
+    number: Optional[int] = Form(None)
     zip_code: str = Form(...)
     city: Optional[str] = Form(None)
     state: Optional[str] = Form(None)
@@ -65,24 +65,48 @@ class PropertyCreateRequest(BaseModel):
             photo=photo,
             street=street,
             neighborhood=neighborhood,
-            number=number,
+            number=int(number) if number is not None else None,
             zip_code=zip_code,
             city=city,
             state=state,
         )
 
-
 class PropertyUpdateRequest(BaseModel):
-    nickname: Optional[str]
-    photo: Optional[str]
-    iptu: Optional[float]
+    nickname: Optional[str] = None
+    photo: UploadFile | None = File(None)
+    iptu: Optional[float] = None 
 
-    street: Optional[str]
-    neighborhood: Optional[str]
-    number: Optional[str]
-    zip_code: Optional[str]
-    city: Optional[str]
-    state: Optional[str]
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(None),
+        photo: UploadFile | None = File(None),
+        iptu: float = Form(None),
+        street: str = Form(None),
+        neighborhood: str = Form(None),
+        number: str = Form(None),
+        zip_code: str = Form(None),
+        city: str = Form(None),
+        state: str = Form(None),
+    ):
+        return cls(
+            nickname=nickname,
+            photo=photo,
+            iptu=iptu,
+            street=street,
+            neighborhood=neighborhood,
+            number=int(number) if number is not None else None,
+            zip_code=zip_code,
+            city=city,
+            state=state,
+        )
 
 class HouseStatus(str, Enum):
     alugada = "alugada"
@@ -91,7 +115,7 @@ class HouseStatus(str, Enum):
 
 class HouseCreateRequest(BaseModel):
     nickname: str = Form(...)
-    rooms: int = Form(...)
+    room_count: int = Form(...)
     photo: UploadFile | None = File(None)
     bathrooms: int = Form(...)
     furnished: bool = Form(False)
@@ -101,7 +125,7 @@ class HouseCreateRequest(BaseModel):
     def as_form(
         cls,
         nickname: str = Form(...),
-        rooms: int = Form(...),
+        room_count: int = Form(...),
         photo: UploadFile | None = File(None),
         bathrooms: int = Form(...),
         furnished: bool = Form(False),
@@ -109,9 +133,74 @@ class HouseCreateRequest(BaseModel):
     ):
         return cls(
             nickname=nickname,
-            rooms=rooms,
+            room_count=room_count,
             photo=photo,
             bathrooms=bathrooms,
             furnished=furnished,
             status=status,
         )
+
+class HouseUpdateRequest(BaseModel):
+    nickname: Optional[str] = None
+    photo: UploadFile | None = File(None)
+    room_count: Optional[int] = None
+    bathrooms: Optional[int] = None 
+    furnished: Optional[bool] = None
+    status: Optional[HouseStatus]
+
+    @classmethod
+    def as_form(
+        cls,
+        nickname: str = Form(None),
+        room_count: int = Form(None),
+        photo: UploadFile | None = File(None),
+        bathrooms: int = Form(None),
+        furnished: bool = Form(False),
+        status: HouseStatus = Form(None),
+    ):
+        return cls(
+            nickname=nickname,
+            room_count=room_count,
+            photo=photo,
+            bathrooms=bathrooms,
+            furnished=furnished,
+            status=status,
+        )
+
+class TenantCreateRequest(BaseModel):
+    cpf: str
+    contact: str
+    email: Optional[str] = None
+    name: str
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    emergency_contact: Optional[str] = None
+    income: Optional[float] = None
+    residents: Optional[int] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: str
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+class TenantUpdateRequest(BaseModel):
+    cpf: Optional[str] = None
+    contact: Optional[str] = None
+    email: Optional[str] = None
+    name: Optional[str] = None
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    emergency_contact: Optional[str] = None
+    income: Optional[float] = None
+    residents: Optional[int] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None

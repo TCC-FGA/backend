@@ -17,7 +17,7 @@ from app.core.config import get_settings
 from app.core.security.jwt import create_jwt_token
 from app.core.security.password import get_password_hash
 from app.main import app as fastapi_app
-from app.models.models import Base, Owner as User
+from app.models.models import Base, Properties, Houses, Tenant, Owner as User
 
 default_user_id = "b75365d9-7bf9-4f54-add5-aeab333a087b"
 default_user_email = "geralt@wiedzmin.pl"
@@ -145,6 +145,73 @@ async def fixture_default_user(
     return default_user
 
 
-@pytest.fixture(name="default_user_headers", scope="function")
+@pytest_asyncio.fixture(name="default_user_headers", scope="function")
 def fixture_default_user_headers(default_user: User) -> dict[str, str]:
     return {"Authorization": f"Bearer {default_user_access_token}"}
+
+@pytest_asyncio.fixture(name="default_property", scope="function")
+async def fixture_default_property(session: AsyncSession, default_user: User) -> Properties:
+    property = Properties(
+        apelido = "Casa Teste",
+        iptu = 100.0,
+        foto = None,
+        rua = "Rua Teste",
+        bairro = "Bairro Teste",
+        numero = 1,
+        cep = "11111-111",
+        cidade = "Cidade Teste",
+        estado = "DF",
+        user_id = default_user.user_id
+    )
+
+    session.add(property)
+    await session.commit()
+    await session.refresh(property)
+
+    return property
+
+@pytest_asyncio.fixture(name="default_house", scope="function")
+async def fixture_default_house(session: AsyncSession, default_property: Properties) -> Houses:
+    house = Houses(
+        apelido = "Casa Teste",
+        foto = None,
+        qtd_comodos = 3,
+        banheiros = 2,
+        mobiliada = False,
+        status = "vaga",
+        propriedade_id = default_property.id
+    )
+
+    session.add(house)
+    await session.commit()
+    await session.refresh(house)
+
+    return house
+
+@pytest_asyncio.fixture(name="default_tenant", scope="function")
+async def fixture_default_tenant(session: AsyncSession, default_property: Properties, default_user:User) -> Tenant:
+    tenant = Tenant(
+        cpf = "12345678900",
+        contato = "555-5555",
+        email = "teste@mail.com",
+        nome = "John Doe",
+        profissao = "Engineer",
+        estado_civil = "solteiro",
+        data_nascimento = date(1990, 1, 1),
+        contato_emergencia = "61-99555-5556",
+        renda = 5000.0,
+        num_residentes = 2,
+        user_id = default_user.user_id,
+        rua = "Rua Teste",
+        bairro = "Bairro Teste",
+        numero = 1,
+        cep = "11111-111",
+        cidade = "Cidade Teste",
+        estado = "DF"
+    )
+
+    session.add(tenant)
+    await session.commit()
+    await session.refresh(tenant)
+
+    return tenant
