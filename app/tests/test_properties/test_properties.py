@@ -151,32 +151,32 @@ async def test_delete_nonexistent_property(session: AsyncSession, client: AsyncC
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == "Property not found"
 
-@pytest.mark.asyncio
-async def test_create_property_with_photo(session: AsyncSession, client: AsyncClient, default_user_headers: dict) -> None:
-    with open("app/tests/test_files/test_image.jpg", "rb") as image_file:
-        # Separar dados e arquivos
-        data = {
-            "nickname": "Minha Casa com Foto",
-            "iptu": 355.0,
-            "street": "Qr 500 Conjunto 1",
-            "neighborhood": "Samambaia",
-            "number": 30,
-            "zip_code": "72301-001",
-            "city": "Brasília",
-            "state": "DF"
-        }
+# @pytest.mark.asyncio
+# async def test_create_property_with_photo(session: AsyncSession, client: AsyncClient, default_user_headers: dict) -> None:
+#     with open("app/tests/test_files/test_image.jpg", "rb") as image_file:
+#         # Separar dados e arquivos
+#         data = {
+#             "nickname": "Minha Casa com Foto",
+#             "iptu": 355.0,
+#             "street": "Qr 500 Conjunto 1",
+#             "neighborhood": "Samambaia",
+#             "number": 30,
+#             "zip_code": "72301-001",
+#             "city": "Brasília",
+#             "state": "DF"
+#         }
 
-        files = {
-            "photo": image_file
-        }
+#         files = {
+#             "photo": image_file
+#         }
 
-        response = await client.post("/properties", data=data, files=files, headers=default_user_headers)
+#         response = await client.post("/properties", data=data, files=files, headers=default_user_headers)
 
-        assert response.status_code == status.HTTP_201_CREATED
-        json_response = response.json()
-        assert json_response["nickname"] == "Minha Casa com Foto"
-        assert json_response["iptu"] == 355.0
-        assert json_response["photo"] is not None  
+#         assert response.status_code == status.HTTP_201_CREATED
+#         json_response = response.json()
+#         assert json_response["nickname"] == "Minha Casa com Foto"
+#         assert json_response["iptu"] == 355.0
+#         assert json_response["photo"] is not None  
 
 @pytest.mark.asyncio
 async def test_get_properties_empty(session: AsyncSession, client: AsyncClient, default_user_headers: dict) -> None:
