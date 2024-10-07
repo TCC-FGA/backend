@@ -26,7 +26,7 @@ class PasswordResetConfirmRequest(BaseModel):
 
 class UserCreateRequest(BaseRequest):
     email: EmailStr
-    photo: Optional[str]
+    photo: Optional[str] = None
     password: str
     name: str
     telephone: str
@@ -72,16 +72,16 @@ class PropertyCreateRequest(BaseModel):
         )
 
 class PropertyUpdateRequest(BaseModel):
-    nickname: Optional[str]
+    nickname: Optional[str] = None
     photo: UploadFile | None = File(None)
-    iptu: Optional[float]
+    iptu: Optional[float] = None 
 
-    street: Optional[str]
-    neighborhood: Optional[str]
-    number: Optional[int]
-    zip_code: Optional[str]
-    city: Optional[str]
-    state: Optional[str]
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
 
     @classmethod
     def as_form(
@@ -141,11 +141,11 @@ class HouseCreateRequest(BaseModel):
         )
 
 class HouseUpdateRequest(BaseModel):
-    nickname: Optional[str]
+    nickname: Optional[str] = None
     photo: UploadFile | None = File(None)
-    room_count: Optional[int]
-    bathrooms: Optional[int]
-    furnished: Optional[bool]
+    room_count: Optional[int] = None
+    bathrooms: Optional[int] = None 
+    furnished: Optional[bool] = None
     status: Optional[HouseStatus]
 
     @classmethod
