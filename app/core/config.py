@@ -17,13 +17,6 @@ class Security(BaseModel):
     allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
     backend_cors_origins: list[AnyHttpUrl] = []
     email_host: SecretStr
-    service_account_project_id: str
-    service_account_private_key_id: str
-    service_account_private_key: SecretStr
-    service_account_client_email: str
-    service_account_client_id: str
-    client_x509_cert_url: str
-    auth_provider_x509_cert_url: str
 
 
 class Database(BaseModel):

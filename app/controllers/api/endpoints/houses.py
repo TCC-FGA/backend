@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.controllers.api.api_messages as api_messages
 from app.controllers.api import deps
-from app.models.models import Houses
+from app.models.models import Houses, Props
 from app.models.models import Properties
 from app.models.models import Owner as User
 from app.schemas.map_responses import map_house_to_response
@@ -103,7 +103,9 @@ async def create_house(
     
     file_path = None
     if house_data.photo is not None:
-        file_path = GCStorage().upload_file(house_data.photo)
+        key = await session.execute(select(Props.column).limit(1))
+        key_response = key.scalar_one_or_none()
+        file_path = GCStorage(key_response).upload_file(house_data.photo)
     
     new_house = Houses(
         apelido=house_data.nickname,
