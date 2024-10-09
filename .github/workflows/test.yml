@@ -21,14 +21,6 @@ jobs:
       DATABASE__PASSWORD: postgres
       DATABASE_URL: postgresql://postgres:postgres@localhost/my_test_db
       SECURITY__EMAIL_HOST: ${{ secrets.SECURITY__EMAIL_HOST }}
-      SECURITY__SERVICE_ACCOUNT: '{"type": "service_account", "project_id": "my_project_id", "private_key_id": "my_private_key_id", "private}'
-      SECURITY__SERVICE_ACCOUNT_PROJECT_ID: my_project_id
-      SECURITY__SERVICE_ACCOUNT_PRIVATE_KEY_ID: my_private_key_id
-      SECURITY__SERVICE_ACCOUNT_PRIVATE_KEY: my_private_key
-      SECURITY__SERVICE_ACCOUNT_CLIENT_EMAIL: my@client@email.com
-      SECURITY__SERVICE_ACCOUNT_CLIENT_ID: 1234567
-      SECURITY__CLIENT_X509_CERT_URL: https://www.googleapis.com/robot/v1/metadata/x509/my@
-      SECURITY__AUTH_PROVIDER_X509_CERT_URL: https://www.googleapis.com/oauth2/v1/cer
 
     services:
       postgres_db:

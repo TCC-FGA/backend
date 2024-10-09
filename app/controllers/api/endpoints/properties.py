@@ -3,7 +3,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.controllers.api import deps
-from app.models.models import Properties
+from app.models.models import Properties, Props
 from app.models.models import Owner as User
 from app.schemas.map_responses import map_property_to_response
 from app.schemas.requests import PropertyCreateRequest, PropertyUpdateRequest
@@ -26,9 +26,13 @@ async def create_property(
     session: AsyncSession = Depends(deps.get_session),
 ) -> PropertyResponse:
     file_path = None
+    
     if property_data.photo is not None:
-        file_path = GCStorage().upload_file(property_data.photo)
+        result = await session.execute(select(Props.column).limit(1))
+        key = result.scalar()
+        file_path = GCStorage(key).upload_file(property_data.photo)
 
+    
     new_property = Properties(
         apelido=property_data.nickname,
         foto=file_path,

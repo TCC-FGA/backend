@@ -4,7 +4,7 @@ from datetime import datetime, date
 from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, String, Uuid, func, Date, Enum, Text, Numeric
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.schema import UniqueConstraint
-
+from sqlalchemy.dialects.postgresql import JSONB
 
 class Base(DeclarativeBase):
     create_time: Mapped[datetime] = mapped_column(
@@ -13,6 +13,12 @@ class Base(DeclarativeBase):
     update_time: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
+
+class Props(Base):
+    __tablename__ = "config"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    column: Mapped[dict] = mapped_column(JSONB, nullable=False)
 
 class Address():
     rua: Mapped[str] = mapped_column(String(255), nullable=True)

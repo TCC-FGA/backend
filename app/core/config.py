@@ -11,19 +11,12 @@ PROJECT_DIR = Path(__file__).parent.parent.parent
 class Security(BaseModel):
     jwt_issuer: str = "my-app"
     jwt_secret_key: SecretStr
-    jwt_access_token_expire_secs: int = 24 * 3600  # 1d
+    jwt_access_token_expire_secs: int = 28 * 24 * 3600  # 1d
     refresh_token_expire_secs: int = 28 * 24 * 3600  # 28d
     password_bcrypt_rounds: int = 12
     allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
     backend_cors_origins: list[AnyHttpUrl] = []
     email_host: SecretStr
-    service_account_project_id: str
-    service_account_private_key_id: str
-    service_account_private_key: SecretStr
-    service_account_client_email: str
-    service_account_client_id: str
-    client_x509_cert_url: str
-    auth_provider_x509_cert_url: str
 
 
 class Database(BaseModel):
