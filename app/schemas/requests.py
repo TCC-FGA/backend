@@ -16,6 +16,11 @@ class RefreshTokenRequest(BaseRequest):
 class UserUpdatePasswordRequest(BaseRequest):
     password: str
 
+class UserUpdateRequest(BaseModel):
+    telephone: Optional[str] = None
+    name: Optional[str] = None
+    hashed_signature: Optional[str] = None
+
 class PasswordResetRequest(BaseModel):
     email: EmailStr
 

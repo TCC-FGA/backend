@@ -187,9 +187,9 @@ class Tenant(Base, Address):
 
     user: Mapped["Owner"] = relationship("Owner", back_populates="inquilino")
     fiador: Mapped["Guarantor"] = relationship(
-    "Guarantor", back_populates="inquilino", cascade="all, delete-orphan"
+        "Guarantor", back_populates="inquilino", cascade="all, delete-orphan"
     )
-    contrato: Mapped["Contract"] = relationship("Contract", back_populates="inquilino")
+    contratos: Mapped["Contract"] = relationship("Contract", back_populates="inquilino")
 
     __table_args__ = (
         UniqueConstraint("cpf", "user_id", name="uq_inquilino_cpf_user_id"),
@@ -212,7 +212,7 @@ class Template(Base):
         Enum("residencial", "comercial", name="tipo_contrato"), nullable=False
     )
 
-    contrato = Mapped[list["Contract"]] = relationship(
+    contratos: Mapped[list["Contract"]] = relationship(
         "Contract", back_populates="template"
     )
 
@@ -236,10 +236,10 @@ class Contract(Base):
     )
 
     parcelas: Mapped[list["PaymentInstallment"]] = relationship(
-        "PaymentInstallment", back_populates="contrato"
+        "PaymentInstallment", back_populates="contratos"
     )
-    template: Mapped["Template"] = relationship("Template", back_populates="contrato")
-    casa: Mapped["Houses"] = relationship("Houses", back_populates="contratos")
+    template: Mapped["Template"] = relationship("Template", back_populates="contratos")
+    casas: Mapped["Houses"] = relationship("Houses", back_populates="contratos")
     inquilino: Mapped["Tenant"] = relationship("Tenant", back_populates="contratos")
 
 
@@ -275,4 +275,4 @@ class PaymentInstallment(Base):
     )
     contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
 
-    contrato: Mapped["Contract"] = relationship("Contract", back_populates="parcelas")
+    contratos: Mapped["Contract"] = relationship("Contract", back_populates="parcelas")

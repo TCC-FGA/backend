@@ -9,7 +9,7 @@ from app.core.security.jwt import generate_reset_token, verify_reset_token
 from app.core.security.password import get_password_hash
 from app.models.models import Owner as User
 from app.schemas.map_responses import map_user_to_response
-from app.schemas.requests import UserUpdatePasswordRequest, PasswordResetRequest, PasswordResetConfirmRequest
+from app.schemas.requests import UserUpdatePasswordRequest, UserUpdateRequest, PasswordResetRequest, PasswordResetConfirmRequest
 from app.schemas.responses import UserResponse
 import requests
 
@@ -20,6 +20,25 @@ router = APIRouter()
 async def read_current_user(
     current_user: User = Depends(deps.get_current_user),
 ) -> UserResponse:
+    return map_user_to_response(current_user)
+
+@router.patch("/me", response_model=UserResponse, description="Update current user")
+async def update_current_user(
+    user_data: UserUpdateRequest,
+    current_user: User = Depends(deps.get_current_user),
+    session: AsyncSession = Depends(deps.get_session),
+) -> UserResponse:
+    
+    result = await session.execute(select(User).where(User.user_id == current_user.user_id))
+    user = result.scalars().first()
+    
+    user.telefone = user_data.telephone if user_data.telephone is not None else user.telefone
+    user.nome = user_data.name if user_data.name is not None else user.nome
+    user.assinatura_hash = user_data.hashed_signature if user_data.hashed_signature is not None else user.assinatura_hash
+    
+    await session.commit()
+    await session.refresh(user)
+
     return map_user_to_response(current_user)
 
 
