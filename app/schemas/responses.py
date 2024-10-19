@@ -82,3 +82,15 @@ class TenantResponse(BaseModel):
     class Config:
         from_attributes = True
     
+class TemplateResponse(BaseModel):
+    id: int
+    template_name: str
+    description: Optional[str]
+    garage: bool
+    warranty: str
+    animals: bool
+    sublease: bool
+    contract_type: str
+
+    class Config:
+        from_attributes = True

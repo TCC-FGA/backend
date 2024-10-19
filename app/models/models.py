@@ -70,7 +70,12 @@ class Owner(Base):
     inquilino: Mapped[list["Tenant"]] = relationship(
         "Tenant", back_populates="user", cascade="all, delete-orphan"
     )
-
+    contratos: Mapped[list["Contract"]] = relationship(
+        "Contract", back_populates="user", cascade="all, delete-orphan"
+    )
+    templates: Mapped[list["Template"]] = relationship(
+        "Template", back_populates="user", cascade="all, delete-orphan"
+    )
 
 class RefreshToken(Base):
     __tablename__ = "refresh_token"
@@ -211,7 +216,11 @@ class Template(Base):
     tipo_contrato: Mapped[enumerate] = mapped_column(
         Enum("residencial", "comercial", name="tipo_contrato"), nullable=False
     )
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("conta_usuario.user_id"), nullable=False
+    )
 
+    user: Mapped["Owner"] = relationship("Owner", back_populates="templates")
     contratos: Mapped[list["Contract"]] = relationship(
         "Contract", back_populates="template"
     )
@@ -234,6 +243,9 @@ class Contract(Base):
     inquilino_id: Mapped[int] = mapped_column(
         ForeignKey("inquilino.id"), nullable=False
     )
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("conta_usuario.user_id"), nullable=False
+    )
 
     parcelas: Mapped[list["PaymentInstallment"]] = relationship(
         "PaymentInstallment", back_populates="contratos"
@@ -241,6 +253,7 @@ class Contract(Base):
     template: Mapped["Template"] = relationship("Template", back_populates="contratos")
     casas: Mapped["Houses"] = relationship("Houses", back_populates="contratos")
     inquilino: Mapped["Tenant"] = relationship("Tenant", back_populates="contratos")
+    user: Mapped["Owner"] = relationship("Owner", back_populates="contratos")
 
 
 class PaymentInstallment(Base):

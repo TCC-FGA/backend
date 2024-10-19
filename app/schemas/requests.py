@@ -209,3 +209,30 @@ class TenantUpdateRequest(BaseModel):
     zip_code: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
+
+class ContractType(str, Enum):
+    residencial = "residencial"
+    comercial = "comercial"
+
+class Warranty(str, Enum):
+    fiador = "fiador"
+    caução = "caução"
+    nenhum = "nenhum"
+
+class TemplateCreateRequest(BaseModel):
+    template_name: str
+    description: Optional[str] = None
+    garage: bool
+    warranty: Warranty
+    animals: bool
+    sublease: bool
+    contract_type: ContractType
+
+class TemplateUpdateRequest(BaseModel):
+    template_name: Optional[str] = None
+    description: Optional[str] = None
+    garage: Optional[bool] = None
+    warranty: Optional[Warranty] = None
+    animals: Optional[bool] = None
+    sublease: Optional[bool] = None
+    contract_type: Optional[ContractType] = None
