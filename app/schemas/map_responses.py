@@ -1,5 +1,11 @@
-from app.models.models import Houses, Properties, Owner, Tenant
-from app.schemas.responses import HouseResponse, PropertyResponse, UserResponse, TenantResponse
+from app.models.models import Houses, Properties, Owner, Tenant, Template
+from app.schemas.responses import (
+    HouseResponse,
+    PropertyResponse,
+    UserResponse,
+    TenantResponse,
+    TemplateResponse,
+)
 
 
 def map_property_to_response(property: Properties) -> PropertyResponse:
@@ -9,13 +15,14 @@ def map_property_to_response(property: Properties) -> PropertyResponse:
         photo=property.foto,
         iptu=property.iptu,
         owner_id=property.user_id,
-        street=property.rua, 
+        street=property.rua,
         neighborhood=property.bairro,
         number=property.numero,
         zip_code=property.cep,
         city=property.cidade,
         state=property.estado,
     )
+
 
 def map_user_to_response(user: Owner) -> UserResponse:
     return UserResponse(
@@ -29,6 +36,7 @@ def map_user_to_response(user: Owner) -> UserResponse:
         photo=user.foto,
     )
 
+
 def map_house_to_response(house: Houses) -> HouseResponse:
     return HouseResponse(
         id=house.id,
@@ -40,6 +48,7 @@ def map_house_to_response(house: Houses) -> HouseResponse:
         furnished=house.mobiliada,
         status=str(house.status),
     )
+
 
 def map_tenant_to_response(tenant: Tenant) -> TenantResponse:
     return TenantResponse(
@@ -60,4 +69,17 @@ def map_tenant_to_response(tenant: Tenant) -> TenantResponse:
         zip_code=tenant.cep,
         city=tenant.cidade,
         state=tenant.estado,
+    )
+
+
+def map_template_to_response(template: Template) -> TemplateResponse:
+    return TemplateResponse(
+        id=template.id,
+        template_name=template.nome_template,
+        description=template.descricao,
+        garage=template.garagem,
+        warranty=template.garantia,
+        animals=template.animais,
+        sublease=template.sublocacao,
+        contract_type=template.tipo_contrato,
     )

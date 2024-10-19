@@ -17,7 +17,7 @@ from app.core.config import get_settings
 from app.core.security.jwt import create_jwt_token
 from app.core.security.password import get_password_hash
 from app.main import app as fastapi_app
-from app.models.models import Base, Properties, Houses, Tenant, Owner as User
+from app.models.models import Base, Properties, Houses, Tenant, Template, Owner as User
 
 default_user_id = "b75365d9-7bf9-4f54-add5-aeab333a087b"
 default_user_email = "geralt@wiedzmin.pl"
@@ -31,7 +31,6 @@ default_user_pix_key = "1234567890"
 default_user_is_admin = False
 default_user_birth_date_string = "1990-01-01"
 default_user_access_token = create_jwt_token(default_user_id).access_token
-
 
 
 @pytest.fixture(scope="session")
@@ -149,19 +148,22 @@ async def fixture_default_user(
 def fixture_default_user_headers(default_user: User) -> dict[str, str]:
     return {"Authorization": f"Bearer {default_user_access_token}"}
 
+
 @pytest_asyncio.fixture(name="default_property", scope="function")
-async def fixture_default_property(session: AsyncSession, default_user: User) -> Properties:
+async def fixture_default_property(
+    session: AsyncSession, default_user: User
+) -> Properties:
     property = Properties(
-        apelido = "Casa Teste",
-        iptu = 100.0,
-        foto = None,
-        rua = "Rua Teste",
-        bairro = "Bairro Teste",
-        numero = 1,
-        cep = "11111-111",
-        cidade = "Cidade Teste",
-        estado = "DF",
-        user_id = default_user.user_id
+        apelido="Casa Teste",
+        iptu=100.0,
+        foto=None,
+        rua="Rua Teste",
+        bairro="Bairro Teste",
+        numero=1,
+        cep="11111-111",
+        cidade="Cidade Teste",
+        estado="DF",
+        user_id=default_user.user_id,
     )
 
     session.add(property)
@@ -170,16 +172,19 @@ async def fixture_default_property(session: AsyncSession, default_user: User) ->
 
     return property
 
+
 @pytest_asyncio.fixture(name="default_house", scope="function")
-async def fixture_default_house(session: AsyncSession, default_property: Properties) -> Houses:
+async def fixture_default_house(
+    session: AsyncSession, default_property: Properties
+) -> Houses:
     house = Houses(
-        apelido = "Casa Teste",
-        foto = None,
-        qtd_comodos = 3,
-        banheiros = 2,
-        mobiliada = False,
-        status = "vaga",
-        propriedade_id = default_property.id
+        apelido="Casa Teste",
+        foto=None,
+        qtd_comodos=3,
+        banheiros=2,
+        mobiliada=False,
+        status="vaga",
+        propriedade_id=default_property.id,
     )
 
     session.add(house)
@@ -188,26 +193,29 @@ async def fixture_default_house(session: AsyncSession, default_property: Propert
 
     return house
 
+
 @pytest_asyncio.fixture(name="default_tenant", scope="function")
-async def fixture_default_tenant(session: AsyncSession, default_property: Properties, default_user:User) -> Tenant:
+async def fixture_default_tenant(
+    session: AsyncSession, default_property: Properties, default_user: User
+) -> Tenant:
     tenant = Tenant(
-        cpf = "12345678900",
-        contato = "555-5555",
-        email = "teste@mail.com",
-        nome = "John Doe",
-        profissao = "Engineer",
-        estado_civil = "solteiro",
-        data_nascimento = date(1990, 1, 1),
-        contato_emergencia = "61-99555-5556",
-        renda = 5000.0,
-        num_residentes = 2,
-        user_id = default_user.user_id,
-        rua = "Rua Teste",
-        bairro = "Bairro Teste",
-        numero = 1,
-        cep = "11111-111",
-        cidade = "Cidade Teste",
-        estado = "DF"
+        cpf="12345678900",
+        contato="555-5555",
+        email="teste@mail.com",
+        nome="John Doe",
+        profissao="Engineer",
+        estado_civil="solteiro",
+        data_nascimento=date(1990, 1, 1),
+        contato_emergencia="61-99555-5556",
+        renda=5000.0,
+        num_residentes=2,
+        user_id=default_user.user_id,
+        rua="Rua Teste",
+        bairro="Bairro Teste",
+        numero=1,
+        cep="11111-111",
+        cidade="Cidade Teste",
+        estado="DF",
     )
 
     session.add(tenant)
@@ -215,3 +223,25 @@ async def fixture_default_tenant(session: AsyncSession, default_property: Proper
     await session.refresh(tenant)
 
     return tenant
+
+
+@pytest_asyncio.fixture(name="default_template", scope="function")
+async def fixture_default_template(
+    session: AsyncSession, default_user: User
+) -> Template:
+    template = Template(
+        nome_template="Template Teste",
+        descricao="Descrição Teste",
+        garagem=True,
+        garantia="caução",
+        animais=False,
+        sublocacao=False,
+        tipo_contrato="residencial",
+        user_id=default_user.user_id,
+    )
+
+    session.add(template)
+    await session.commit()
+    await session.refresh(template)
+
+    return template
