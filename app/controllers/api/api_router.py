@@ -3,11 +3,11 @@ from fastapi import APIRouter
 from app.controllers.api import api_messages
 from app.controllers.api.endpoints import (
     auth,
+    templates,
     users,
     properties,
     houses,
     tenants,
-    template,
     contracts,
 )
 
@@ -43,5 +43,5 @@ api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(properties.router, tags=["properties"])
 api_router.include_router(houses.router, tags=["houses"])
 api_router.include_router(tenants.router, tags=["tenants"])
-api_router.include_router(template.router, tags=["template"])
+api_router.include_router(templates.router, tags=["templates"])
 api_router.include_router(contracts.router, tags=["contracts"])
