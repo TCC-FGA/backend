@@ -1,4 +1,12 @@
-from app.models.models import Houses, Properties, Owner, Tenant, Template, Contract
+from app.models.models import (
+    Houses,
+    Properties,
+    Owner,
+    Tenant,
+    Template,
+    Contract,
+    Expenses,
+)
 from app.schemas.responses import (
     HouseResponse,
     PropertyResponse,
@@ -6,6 +14,7 @@ from app.schemas.responses import (
     TenantResponse,
     TemplateResponse,
     ContractResponse,
+    ExpenseResponse,
 )
 
 
@@ -99,4 +108,13 @@ def map_contract_to_response(contract: Contract) -> ContractResponse:
         template_id=contract.template_id,
         tenant_id=contract.inquilino_id,
         user_id=contract.user_id,
+    )
+
+def map_expense_to_response(expense: Expenses) -> ExpenseResponse:
+    return ExpenseResponse(
+        id=expense.id,
+        expense_type=str(expense.tipo_despesa),
+        value=expense.valor,
+        expense_date=expense.data_despesa,
+        house_id=expense.casa_id,
     )

@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime, date
 from enum import Enum
 
+
 class BaseRequest(BaseModel):
     # may define additional fields or config shared across requests
     pass
@@ -16,18 +17,22 @@ class RefreshTokenRequest(BaseRequest):
 class UserUpdatePasswordRequest(BaseRequest):
     password: str
 
+
 class UserUpdateRequest(BaseModel):
     telephone: Optional[str] = None
     name: Optional[str] = None
     hashed_signature: Optional[str] = None
 
+
 class PasswordResetRequest(BaseModel):
     email: EmailStr
+
 
 class PasswordResetConfirmRequest(BaseModel):
     token: str
     new_password: str
     confirm_password: str
+
 
 class UserCreateRequest(BaseRequest):
     email: EmailStr
@@ -39,8 +44,9 @@ class UserCreateRequest(BaseRequest):
     cpf: str
     birth_date: date
 
+
 class PropertyCreateRequest(BaseModel):
-    
+
     nickname: str = Form(...)
     photo: UploadFile | None = File(None)
     iptu: float = Form(...)
@@ -76,10 +82,11 @@ class PropertyCreateRequest(BaseModel):
             state=state,
         )
 
+
 class PropertyUpdateRequest(BaseModel):
     nickname: Optional[str] = None
     photo: UploadFile | None = File(None)
-    iptu: Optional[float] = None 
+    iptu: Optional[float] = None
 
     street: Optional[str] = None
     neighborhood: Optional[str] = None
@@ -113,10 +120,12 @@ class PropertyUpdateRequest(BaseModel):
             state=state,
         )
 
+
 class HouseStatus(str, Enum):
     alugada = "alugada"
     vaga = "vaga"
     reforma = "reforma"
+
 
 class HouseCreateRequest(BaseModel):
     nickname: str = Form(...)
@@ -145,11 +154,12 @@ class HouseCreateRequest(BaseModel):
             status=status,
         )
 
+
 class HouseUpdateRequest(BaseModel):
     nickname: Optional[str] = None
     photo: UploadFile | None = File(None)
     room_count: Optional[int] = None
-    bathrooms: Optional[int] = None 
+    bathrooms: Optional[int] = None
     furnished: Optional[bool] = None
     status: Optional[HouseStatus]
 
@@ -172,6 +182,7 @@ class HouseUpdateRequest(BaseModel):
             status=status,
         )
 
+
 class TenantCreateRequest(BaseModel):
     cpf: str
     contact: str
@@ -190,6 +201,7 @@ class TenantCreateRequest(BaseModel):
     zip_code: str
     city: Optional[str] = None
     state: Optional[str] = None
+
 
 class TenantUpdateRequest(BaseModel):
     cpf: Optional[str] = None
@@ -210,14 +222,17 @@ class TenantUpdateRequest(BaseModel):
     city: Optional[str] = None
     state: Optional[str] = None
 
+
 class ContractType(str, Enum):
     residencial = "residencial"
     comercial = "comercial"
+
 
 class Warranty(str, Enum):
     fiador = "fiador"
     caução = "caução"
     nenhum = "nenhum"
+
 
 class TemplateCreateRequest(BaseModel):
     template_name: str
@@ -228,6 +243,7 @@ class TemplateCreateRequest(BaseModel):
     sublease: bool
     contract_type: ContractType
 
+
 class TemplateUpdateRequest(BaseModel):
     template_name: Optional[str] = None
     description: Optional[str] = None
@@ -237,8 +253,10 @@ class TemplateUpdateRequest(BaseModel):
     sublease: Optional[bool] = None
     contract_type: Optional[ContractType] = None
 
+
 class ReajustmentRate(str, Enum):
     igpm = "igpm"
+
 
 class ContractCreateRequest(BaseModel):
     deposit_value: Optional[float] = None
@@ -250,3 +268,22 @@ class ContractCreateRequest(BaseModel):
     house_id: int
     template_id: int
     tenant_id: int
+
+
+class ExpenseType(str, Enum):
+    manutenção = "manutenção"
+    reparo = "reparo"
+    imposto = "imposto"
+
+
+class ExpenseCreateRequest(BaseModel):
+    expense_type: ExpenseType
+    value: float
+    expense_date: date
+    house_id: int
+
+class ExpenseUpdateRequest(BaseModel):
+    expense_type: Optional[ExpenseType] = None
+    value: Optional[float] = None
+    expense_date: Optional[date] = None
+

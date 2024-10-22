@@ -21,7 +21,7 @@ class UserResponse(BaseResponse):
     telephone: str
     hashed_signature: Optional[str]
     cpf: str
-    birth_date: date 
+    birth_date: date
     name: str
     photo: Optional[str]
 
@@ -46,6 +46,7 @@ class PropertyResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class HouseResponse(BaseModel):
     id: int
     property_id: int
@@ -55,9 +56,10 @@ class HouseResponse(BaseModel):
     bathrooms: int
     furnished: bool
     status: str
-    
+
     class Config:
         from_attributes = True
+
 
 class TenantResponse(BaseModel):
     id: int
@@ -71,7 +73,7 @@ class TenantResponse(BaseModel):
     emergency_contact: Optional[str]
     income: Optional[float]
     residents: Optional[int]
-    
+
     street: Optional[str]
     neighborhood: Optional[str]
     number: Optional[int]
@@ -81,7 +83,8 @@ class TenantResponse(BaseModel):
 
     class Config:
         from_attributes = True
-    
+
+
 class TemplateResponse(BaseModel):
     id: int
     template_name: str
@@ -95,6 +98,7 @@ class TemplateResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class ContractResponse(BaseModel):
     id: int
     deposit_value: float
@@ -107,6 +111,17 @@ class ContractResponse(BaseModel):
     template_id: int
     tenant_id: int
     user_id: str
+
+    class Config:
+        from_attributes = True
+
+
+class ExpenseResponse(BaseModel):
+    id: int
+    expense_type: str
+    value: float
+    expense_date: date
+    house_id: int
 
     class Config:
         from_attributes = True
