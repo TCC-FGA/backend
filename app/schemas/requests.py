@@ -236,3 +236,17 @@ class TemplateUpdateRequest(BaseModel):
     animals: Optional[bool] = None
     sublease: Optional[bool] = None
     contract_type: Optional[ContractType] = None
+
+class ReajustmentRate(str, Enum):
+    igpm = "igpm"
+
+class ContractCreateRequest(BaseModel):
+    deposit_value: Optional[float] = None
+    start_date: date
+    end_date: date
+    base_value: float
+    due_date: int
+    reajustment_rate: Optional[ReajustmentRate] = None
+    house_id: int
+    template_id: int
+    tenant_id: int

@@ -94,3 +94,19 @@ class TemplateResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ContractResponse(BaseModel):
+    id: int
+    deposit_value: float
+    start_date: date
+    end_date: date
+    base_value: float
+    due_date: int
+    reajustment_rate: Optional[str]
+    house_id: int
+    template_id: int
+    tenant_id: int
+    user_id: str
+
+    class Config:
+        from_attributes = True

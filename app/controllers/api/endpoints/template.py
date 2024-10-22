@@ -135,7 +135,7 @@ async def update_template(
     existing_template.garantia = (
         template_data.warranty
         if template_data.warranty is not None
-        else existing_template.garantia
+        else existing_template.garantia # type: ignore
     )
     existing_template.animais = (
         template_data.animals
@@ -150,7 +150,7 @@ async def update_template(
     existing_template.tipo_contrato = (
         template_data.contract_type
         if template_data.contract_type is not None
-        else existing_template.tipo_contrato
+        else existing_template.tipo_contrato # type: ignore
     )
 
     session.add(existing_template)

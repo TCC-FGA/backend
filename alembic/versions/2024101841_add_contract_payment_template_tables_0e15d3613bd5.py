@@ -35,7 +35,7 @@ def upgrade() -> None:
     )
     op.create_table('contrato',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('valor_calcao', sa.Numeric(), nullable=False),
+    sa.Column('valor_caucao', sa.Numeric(), nullable=False),
     sa.Column('data_inicio', sa.Date(), nullable=False),
     sa.Column('data_fim', sa.Date(), nullable=False),
     sa.Column('valor_base', sa.Numeric(), nullable=False),
@@ -58,7 +58,6 @@ def upgrade() -> None:
     sa.Column('tipo_pagamento', sa.Enum('dinheiro', 'cartão', 'transferência', 'outro', name='tipo_pagamento'), nullable=False),
     sa.Column('data_vencimento', sa.Date(), nullable=False),
     sa.Column('data_pagamento', sa.Date(), nullable=True),
-    sa.Column('mes_referencia', sa.Enum('janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro', name='mes_referencia'), nullable=False),
     sa.Column('contrato_id', sa.Integer(), nullable=False),
     sa.Column('create_time', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('update_time', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),

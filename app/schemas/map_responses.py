@@ -1,10 +1,11 @@
-from app.models.models import Houses, Properties, Owner, Tenant, Template
+from app.models.models import Houses, Properties, Owner, Tenant, Template, Contract
 from app.schemas.responses import (
     HouseResponse,
     PropertyResponse,
     UserResponse,
     TenantResponse,
     TemplateResponse,
+    ContractResponse,
 )
 
 
@@ -78,8 +79,24 @@ def map_template_to_response(template: Template) -> TemplateResponse:
         template_name=template.nome_template,
         description=template.descricao,
         garage=template.garagem,
-        warranty=template.garantia,
+        warranty=str(template.garantia),
         animals=template.animais,
         sublease=template.sublocacao,
-        contract_type=template.tipo_contrato,
+        contract_type=str(template.tipo_contrato),
+    )
+
+
+def map_contract_to_response(contract: Contract) -> ContractResponse:
+    return ContractResponse(
+        id=contract.id,
+        deposit_value=contract.valor_caucao,
+        start_date=contract.data_inicio,
+        end_date=contract.data_fim,
+        base_value=contract.valor_base,
+        due_date=contract.dia_vencimento,
+        reajustment_rate=str(contract.taxa_reajuste),
+        house_id=contract.casa_id,
+        template_id=contract.template_id,
+        tenant_id=contract.inquilino_id,
+        user_id=contract.user_id,
     )

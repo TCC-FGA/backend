@@ -32,6 +32,9 @@ async def update_current_user(
     result = await session.execute(select(User).where(User.user_id == current_user.user_id))
     user = result.scalars().first()
     
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
     user.telefone = user_data.telephone if user_data.telephone is not None else user.telefone
     user.nome = user_data.name if user_data.name is not None else user.nome
     user.assinatura_hash = user_data.hashed_signature if user_data.hashed_signature is not None else user.assinatura_hash

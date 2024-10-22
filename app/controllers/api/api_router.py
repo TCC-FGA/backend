@@ -8,6 +8,7 @@ from app.controllers.api.endpoints import (
     houses,
     tenants,
     template,
+    contracts,
 )
 
 auth_router = APIRouter()
@@ -43,3 +44,4 @@ api_router.include_router(properties.router, tags=["properties"])
 api_router.include_router(houses.router, tags=["houses"])
 api_router.include_router(tenants.router, tags=["tenants"])
 api_router.include_router(template.router, tags=["template"])
+api_router.include_router(contracts.router, tags=["contracts"])

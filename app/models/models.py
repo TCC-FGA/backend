@@ -230,7 +230,7 @@ class Contract(Base):
     __tablename__ = "contrato"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    valor_calcao: Mapped[float] = mapped_column(Numeric, nullable=False)
+    valor_caucao: Mapped[float] = mapped_column(Numeric, nullable=True)
     data_inicio: Mapped[date] = mapped_column(Date, nullable=False)
     data_fim: Mapped[date] = mapped_column(Date, nullable=False)
     valor_base: Mapped[float] = mapped_column(Numeric, nullable=False)
@@ -268,24 +268,6 @@ class PaymentInstallment(Base):
     )
     data_vencimento: Mapped[date] = mapped_column(Date, nullable=False)
     data_pagamento: Mapped[date] = mapped_column(Date, nullable=True)
-    mes_referencia: Mapped[enumerate] = mapped_column(
-        Enum(
-            "janeiro",
-            "fevereiro",
-            "março",
-            "abril",
-            "maio",
-            "junho",
-            "julho",
-            "agosto",
-            "setembro",
-            "outubro",
-            "novembro",
-            "dezembro",
-            name="mes_referencia",
-        ),
-        nullable=False,
-    )
     contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
 
     contratos: Mapped["Contract"] = relationship("Contract", back_populates="parcelas")
