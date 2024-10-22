@@ -3,6 +3,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.controllers.api import deps
+from app.helpers.get_service_account import get_service_account
 from app.models.models import Properties, Props
 from app.models.models import Owner as User
 from app.schemas.map_responses import map_property_to_response
@@ -75,7 +76,8 @@ async def update_property(
         )
 
     if property_data.photo is not None:
-        file_path = GCStorage().upload_file(property_data.photo)
+        key = await get_service_account(session)
+        file_path = GCStorage(key).upload_file(property_data.photo)
         existing_property.foto = file_path
 
     existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido

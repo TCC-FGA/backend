@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.controllers.api.api_messages as api_messages
 from app.controllers.api import deps
+from app.helpers.get_service_account import get_service_account
 from app.models.models import Houses, Props
 from app.models.models import Properties
 from app.models.models import Owner as User
@@ -149,7 +150,8 @@ async def update_house(
         )
 
     if house_data.photo is not None:
-        file_path = GCStorage().upload_file(house_data.photo)
+        key = await get_service_account(session)
+        file_path = GCStorage(key).upload_file(house_data.photo)
         existing_house.foto = file_path
 
     existing_house.apelido = house_data.nickname if house_data.nickname is not None else existing_house.apelido
