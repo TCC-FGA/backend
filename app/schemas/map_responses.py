@@ -6,6 +6,7 @@ from app.models.models import (
     Template,
     Contract,
     Expenses,
+    Guarantor,
 )
 from app.schemas.responses import (
     HouseResponse,
@@ -15,6 +16,7 @@ from app.schemas.responses import (
     TemplateResponse,
     ContractResponse,
     ExpenseResponse,
+    GuarantorResponse,
 )
 
 
@@ -110,6 +112,7 @@ def map_contract_to_response(contract: Contract) -> ContractResponse:
         user_id=contract.user_id,
     )
 
+
 def map_expense_to_response(expense: Expenses) -> ExpenseResponse:
     return ExpenseResponse(
         id=expense.id,
@@ -117,4 +120,26 @@ def map_expense_to_response(expense: Expenses) -> ExpenseResponse:
         value=expense.valor,
         expense_date=expense.data_despesa,
         house_id=expense.casa_id,
+    )
+
+
+def map_guarantor_to_response(guarantor: Guarantor) -> GuarantorResponse:
+    return GuarantorResponse(
+        id=guarantor.id,
+        tenant_id=guarantor.inquilino_id,
+        cpf=guarantor.cpf,
+        contact=guarantor.contato,
+        email=guarantor.email,
+        name=guarantor.nome,
+        profession=guarantor.profissao,
+        marital_status=guarantor.estado_civil,
+        birth_date=guarantor.data_nascimento,
+        comment=guarantor.comentario,
+        income=guarantor.renda,
+        street=guarantor.rua,
+        neighborhood=guarantor.bairro,
+        number=guarantor.numero,
+        zip_code=guarantor.cep,
+        city=guarantor.cidade,
+        state=guarantor.estado,
     )

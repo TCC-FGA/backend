@@ -125,3 +125,27 @@ class ExpenseResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class GuarantorResponse(BaseModel):
+    id: int
+    tenant_id: int
+    cpf: str
+    contact: str
+    email: Optional[str]
+    name: str
+    profession: Optional[str]
+    marital_status: Optional[str]
+    birth_date: Optional[date]
+    comment: Optional[str]
+    income: Optional[float]
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
+
+    class Config:
+        from_attributes = True

@@ -12,3 +12,6 @@ TENANT_ALREADY_EXISTS = "Tenant already exists"
 TEMPLATE_NOT_FOUND = "Template not found"
 CONTRACT_NOT_FOUND = "Contract not found"
 EXPENSE_NOT_FOUND = "Expense(s) not found"
+GUARANTOR_NOT_FOUND = "Guarantor not found"
+FORBIDDEN_GUARANTOR = "You do not have permission to delete this guarantor."
+

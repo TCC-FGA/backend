@@ -282,8 +282,44 @@ class ExpenseCreateRequest(BaseModel):
     expense_date: date
     house_id: int
 
+
 class ExpenseUpdateRequest(BaseModel):
     expense_type: Optional[ExpenseType] = None
     value: Optional[float] = None
     expense_date: Optional[date] = None
 
+
+class GuarantorCreateRequest(BaseModel):
+    cpf: str
+    contact: str
+    email: Optional[str] = None
+    name: str
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    comment: Optional[str] = None
+    income: Optional[float] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: str
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+class GuarantorUpdateRequest(BaseModel):
+    contact: Optional[str] = None
+    email: Optional[str] = None
+    name: Optional[str] = None
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    birth_date: Optional[date] = None
+    comment: Optional[str] = None
+    income: Optional[float] = None
+
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
