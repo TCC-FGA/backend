@@ -307,6 +307,7 @@ class GuarantorCreateRequest(BaseModel):
     city: Optional[str] = None
     state: Optional[str] = None
 
+
 class GuarantorUpdateRequest(BaseModel):
     contact: Optional[str] = None
     email: Optional[str] = None
@@ -323,3 +324,20 @@ class GuarantorUpdateRequest(BaseModel):
     zip_code: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
+
+
+class PaymentType(str, Enum):
+    dinheiro = "dinheiro"
+    cartão = "cartão"
+    transferência = "transferência"
+    outro = "outro"
+
+
+class PaymentInstallmentCreateRequest(BaseModel):
+    contract_id: int
+
+
+class PaymentInstallmentUpdateRequest(BaseModel):
+    fg_paid: bool
+    payment_type: PaymentType
+    payment_date: date

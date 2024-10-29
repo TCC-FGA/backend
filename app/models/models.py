@@ -261,13 +261,17 @@ class PaymentInstallment(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     valor_parcela: Mapped[float] = mapped_column(Numeric, nullable=False)
-    fg_pago: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    fg_pago: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     tipo_pagamento: Mapped[enumerate] = mapped_column(
         Enum("dinheiro", "cartão", "transferência", "outro", name="tipo_pagamento"),
-        nullable=False,
+        nullable=True,
     )
     data_vencimento: Mapped[date] = mapped_column(Date, nullable=False)
     data_pagamento: Mapped[date] = mapped_column(Date, nullable=True)
     contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
 
     contratos: Mapped["Contract"] = relationship("Contract", back_populates="parcelas")
+
+    __table_args__ = (
+        UniqueConstraint("data_vencimento", "contrato_id", name="uq_data_vencimento_contrato_id"),
+    )

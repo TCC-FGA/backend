@@ -9,6 +9,7 @@ from app.controllers.api.endpoints import (
     houses,
     tenants,
     contracts,
+    payment_installment,
     expenses,
     guarantor,
 )
@@ -47,5 +48,6 @@ api_router.include_router(houses.router, tags=["houses"])
 api_router.include_router(tenants.router, tags=["tenants"])
 api_router.include_router(templates.router, tags=["templates"])
 api_router.include_router(contracts.router, tags=["contracts"])
+api_router.include_router(payment_installment.router, tags=["payment_installment"])
 api_router.include_router(expenses.router, tags=["expenses"])
 api_router.include_router(guarantor.router, tags=["guarantor"])

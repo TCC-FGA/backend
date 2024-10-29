@@ -14,4 +14,5 @@ CONTRACT_NOT_FOUND = "Contract not found"
 EXPENSE_NOT_FOUND = "Expense(s) not found"
 GUARANTOR_NOT_FOUND = "Guarantor not found"
 FORBIDDEN_GUARANTOR = "You do not have permission to delete this guarantor."
+PAYMENT_INSTALLMENT_NOT_FOUND = "Payment installment not found"
 

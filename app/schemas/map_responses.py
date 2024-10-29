@@ -7,6 +7,7 @@ from app.models.models import (
     Contract,
     Expenses,
     Guarantor,
+    PaymentInstallment,
 )
 from app.schemas.responses import (
     HouseResponse,
@@ -17,6 +18,7 @@ from app.schemas.responses import (
     ContractResponse,
     ExpenseResponse,
     GuarantorResponse,
+    PaymentInstallmentResponse,
 )
 
 
@@ -142,4 +144,18 @@ def map_guarantor_to_response(guarantor: Guarantor) -> GuarantorResponse:
         zip_code=guarantor.cep,
         city=guarantor.cidade,
         state=guarantor.estado,
+    )
+
+
+def map_payment_installment_to_response(
+    payment_installment: PaymentInstallment,
+) -> PaymentInstallmentResponse:
+    return PaymentInstallmentResponse(
+        id=payment_installment.id,
+        installment_value=payment_installment.valor_parcela,
+        fg_paid=payment_installment.fg_pago,
+        payment_type=str(payment_installment.tipo_pagamento),
+        due_date=payment_installment.data_vencimento,
+        payment_date=payment_installment.data_pagamento,
+        contract_id=payment_installment.contrato_id,
     )
