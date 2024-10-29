@@ -21,7 +21,7 @@ class UserResponse(BaseResponse):
     telephone: str
     hashed_signature: Optional[str]
     cpf: str
-    birth_date: date 
+    birth_date: date
     name: str
     photo: Optional[str]
 
@@ -46,6 +46,7 @@ class PropertyResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class HouseResponse(BaseModel):
     id: int
     property_id: int
@@ -55,9 +56,10 @@ class HouseResponse(BaseModel):
     bathrooms: int
     furnished: bool
     status: str
-    
+
     class Config:
         from_attributes = True
+
 
 class TenantResponse(BaseModel):
     id: int
@@ -71,7 +73,7 @@ class TenantResponse(BaseModel):
     emergency_contact: Optional[str]
     income: Optional[float]
     residents: Optional[int]
-    
+
     street: Optional[str]
     neighborhood: Optional[str]
     number: Optional[int]
@@ -81,4 +83,81 @@ class TenantResponse(BaseModel):
 
     class Config:
         from_attributes = True
-    
+
+
+class TemplateResponse(BaseModel):
+    id: int
+    template_name: str
+    description: Optional[str]
+    garage: bool
+    warranty: str
+    animals: bool
+    sublease: bool
+    contract_type: str
+
+    class Config:
+        from_attributes = True
+
+
+class ContractResponse(BaseModel):
+    id: int
+    deposit_value: float
+    start_date: date
+    end_date: date
+    base_value: float
+    due_date: int
+    reajustment_rate: Optional[str]
+    house_id: int
+    template_id: int
+    tenant_id: int
+    user_id: str
+
+    class Config:
+        from_attributes = True
+
+
+class ExpenseResponse(BaseModel):
+    id: int
+    expense_type: str
+    value: float
+    expense_date: date
+    house_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class GuarantorResponse(BaseModel):
+    id: int
+    tenant_id: int
+    cpf: str
+    contact: str
+    email: Optional[str]
+    name: str
+    profession: Optional[str]
+    marital_status: Optional[str]
+    birth_date: Optional[date]
+    comment: Optional[str]
+    income: Optional[float]
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+class PaymentInstallmentResponse(BaseModel):
+    id: int
+    installment_value: float
+    fg_paid: bool
+    payment_type: Optional[str]
+    due_date: date
+    payment_date: Optional[date]
+    contract_id: int
+
+    class Config:
+        from_attributes = True
