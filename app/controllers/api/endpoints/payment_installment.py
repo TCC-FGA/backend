@@ -49,11 +49,10 @@ async def create_payment_installment(
     try:
         parcelas = []
 
-        contract.data_inicio = contract.data_inicio.replace(day=contract.dia_vencimento)
+        data_inicio = contract.data_inicio.replace(day=contract.dia_vencimento)
 
         for i in range(contract_duration):
-            data_vencimento_parcela = contract.data_inicio + relativedelta(months=i + 1)
-            print(f"data vencimento parcela -> {data_vencimento_parcela} | {i}")
+            data_vencimento_parcela = data_inicio + relativedelta(months=i + 1)
             new_payment_installment = PaymentInstallment(
                 contrato_id=contract.id,
                 valor_parcela=contract.valor_base,
@@ -62,8 +61,6 @@ async def create_payment_installment(
                 data_vencimento=data_vencimento_parcela,
                 data_pagamento=None,
             )
-
-            print(f"parcela -> {new_payment_installment.__dict__}")
 
             parcelas.append(new_payment_installment)
 
@@ -152,7 +149,7 @@ async def update_payment_installment(
     existing_payment_installment.tipo_pagamento = (
         payment_installment.payment_type
         if payment_installment.payment_type is not None
-        else existing_payment_installment.tipo_pagamento # type: ignore
+        else existing_payment_installment.tipo_pagamento  # type: ignore
     )
     existing_payment_installment.data_pagamento = (
         payment_installment.payment_date
