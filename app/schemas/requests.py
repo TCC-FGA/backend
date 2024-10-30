@@ -280,7 +280,6 @@ class ExpenseCreateRequest(BaseModel):
     expense_type: ExpenseType
     value: float
     expense_date: date
-    house_id: int
 
 
 class ExpenseUpdateRequest(BaseModel):

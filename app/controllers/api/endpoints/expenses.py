@@ -38,12 +38,13 @@ async def get_expenses(
 
 
 @router.post(
-    "/expenses",
+    "/expenses{house_id}",
     response_model=ExpenseResponse,
     description="Create a new expense",
     status_code=status.HTTP_201_CREATED,
 )
 async def create_expense(
+    house_id: int,
     expense_data: ExpenseCreateRequest,
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
@@ -53,7 +54,7 @@ async def create_expense(
         tipo_despesa=expense_data.expense_type,
         valor=expense_data.value,
         data_despesa=expense_data.expense_date,
-        casa_id=expense_data.house_id,
+        casa_id=house_id,
     )
 
     session.add(new_expense)
