@@ -255,7 +255,7 @@ class TemplateUpdateRequest(BaseModel):
 
 
 class ReajustmentRate(str, Enum):
-    igpm = "igpm"
+    igpm = "IGPM"
 
 
 class ContractCreateRequest(BaseModel):
@@ -268,6 +268,31 @@ class ContractCreateRequest(BaseModel):
     house_id: int
     template_id: int
     tenant_id: int
+
+    @classmethod
+    def as_form(
+        cls,
+        deposit_value: float = Form(None),
+        start_date: date = Form(...),
+        end_date: date = Form(...),
+        base_value: float = Form(...),
+        due_date: int = Form(...),
+        reajustment_rate: ReajustmentRate = Form(None),
+        house_id: int = Form(...),
+        template_id: int = Form(...),
+        tenant_id: int = Form(...),
+    ):
+        return cls(
+            deposit_value=deposit_value,
+            start_date=start_date,
+            end_date=end_date,
+            base_value=base_value,
+            due_date=due_date,
+            reajustment_rate=reajustment_rate,
+            house_id=house_id,
+            template_id=template_id,
+            tenant_id=tenant_id,
+        )
 
 
 class ExpenseType(str, Enum):

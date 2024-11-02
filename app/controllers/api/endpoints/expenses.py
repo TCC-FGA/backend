@@ -38,7 +38,7 @@ async def get_expenses(
 
 
 @router.post(
-    "/expenses{house_id}",
+    "/expenses/{house_id}",
     response_model=ExpenseResponse,
     description="Create a new expense",
     status_code=status.HTTP_201_CREATED,

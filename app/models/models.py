@@ -238,6 +238,7 @@ class Contract(Base):
     taxa_reajuste: Mapped[enumerate] = mapped_column(
         Enum("IGPM", name="taxa_reajuste"), nullable=True
     )
+    pdf_assinado: Mapped[str] = mapped_column(String(256), nullable=True)
     casa_id: Mapped[int] = mapped_column(ForeignKey("casas.id"), nullable=False)
     template_id: Mapped[int] = mapped_column(ForeignKey("template.id"), nullable=False)
     inquilino_id: Mapped[int] = mapped_column(

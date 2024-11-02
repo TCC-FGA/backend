@@ -46,6 +46,11 @@ async def create_payment_installment(
         contract.data_fim.month - contract.data_inicio.month
     )
 
+    if contract_duration < 1:
+        raise HTTPException(
+            status_code=400, detail=api_messages.CONTRACT_DURATION_ERROR
+        )
+
     try:
         parcelas = []
 
@@ -72,7 +77,7 @@ async def create_payment_installment(
     except Exception as e:
         await session.rollback()
         raise HTTPException(
-            status_code=400, detail="Error creating payment installment"
+            status_code=400, detail=api_messages.ERROR_CREATING_PAYMENT_INSTALLMENT
         )
 
     return [map_payment_installment_to_response(parcela) for parcela in parcelas]

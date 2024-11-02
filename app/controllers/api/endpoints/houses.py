@@ -106,7 +106,7 @@ async def create_house(
     if house_data.photo is not None:
         key = await session.execute(select(Props.column).limit(1))
         key_response = key.scalar_one_or_none()
-        file_path = GCStorage(key_response).upload_file(house_data.photo)
+        file_path = GCStorage(key_response).upload_file(house_data.photo, "image")
     
     new_house = Houses(
         apelido=house_data.nickname,
@@ -151,7 +151,7 @@ async def update_house(
 
     if house_data.photo is not None:
         key = await get_service_account(session)
-        file_path = GCStorage(key).upload_file(house_data.photo)
+        file_path = GCStorage(key).upload_file(house_data.photo, "image")
         existing_house.foto = file_path
 
     existing_house.apelido = house_data.nickname if house_data.nickname is not None else existing_house.apelido

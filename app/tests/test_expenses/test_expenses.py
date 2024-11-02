@@ -19,7 +19,7 @@ async def test_create_expense(
     }
 
     response = await client.post(
-        f"/expenses{house_id}", json=expense_data, headers=default_user_headers
+        f"/expenses/{house_id}", json=expense_data, headers=default_user_headers
     )
     assert response.status_code == status.HTTP_201_CREATED
     json_response = response.json()
