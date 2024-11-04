@@ -102,8 +102,7 @@ async def get_contract(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_contract(
-    contract: ContractCreateRequest = Depends(ContractCreateRequest.as_form),
-    signed_pdf: UploadFile = File(None),
+    contract: ContractCreateRequest,
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
 ) -> ContractResponse:
@@ -134,12 +133,6 @@ async def create_contract(
             detail=api_messages.FORBIDDEN_TENANT,
         )
 
-    file_path = None
-    if signed_pdf is not None:
-        key = await session.execute(select(Props.column).limit(1))
-        key_response = key.scalar_one_or_none()
-        file_path = GCStorage(key_response).upload_file(signed_pdf, "pdf")
-
     new_contract = Contract(
         valor_caucao=contract.deposit_value,
         data_inicio=contract.start_date,
@@ -147,7 +140,7 @@ async def create_contract(
         valor_base=contract.base_value,
         dia_vencimento=contract.due_date,
         taxa_reajuste=contract.reajustment_rate,
-        pdf_assinado=file_path,
+        pdf_assinado=None,
         casa_id=contract.house_id,
         template_id=contract.template_id,
         inquilino_id=contract.tenant_id,
@@ -159,6 +152,68 @@ async def create_contract(
     await session.refresh(new_contract)
 
     return map_contract_to_response(new_contract, house, tenant)
+
+
+@router.patch(
+    "/contracts/{contract_id}",
+    response_model=ContractResponse,
+    description="Upload a signed contract by its id",
+)
+async def upload_contract(
+    contract_id: int,
+    signed_pdf: UploadFile = File(...),
+    current_user: User = Depends(deps.get_current_user),
+    session: AsyncSession = Depends(deps.get_session),
+) -> ContractResponse:
+    result = await session.execute(
+        select(Contract).filter(
+            Contract.id == contract_id, Contract.user_id == current_user.user_id
+        )
+    )
+    contract = result.scalar_one_or_none()
+
+    if not contract:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=api_messages.CONTRACT_NOT_FOUND,
+        )
+
+    key = await session.execute(select(Props.column).limit(1))
+    key_response = key.scalar_one_or_none()
+    file_path = GCStorage(key_response).upload_file(signed_pdf, "pdf")
+
+    contract.pdf_assinado = file_path
+    await session.commit()
+    await session.refresh(contract)
+
+    house_result = await session.execute(
+        select(Houses)
+        .join(Properties, Houses.propriedade_id == Properties.id)
+        .where(Houses.id == contract.casa_id)
+        .where(Properties.user_id == current_user.user_id)
+    )
+    house = house_result.scalar_one_or_none()
+
+    tenant_result = await session.execute(
+        select(Tenant)
+        .where(Tenant.id == contract.inquilino_id)
+        .where(Tenant.user_id == current_user.user_id)
+    )
+    tenant = tenant_result.scalar_one_or_none()
+
+    if not house:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=api_messages.FORBIDDEN_HOUSE,
+        )
+
+    if not tenant:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=api_messages.FORBIDDEN_TENANT,
+        )
+
+    return map_contract_to_response(contract, house, tenant)
 
 
 @router.delete(
