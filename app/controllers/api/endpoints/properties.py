@@ -31,7 +31,7 @@ async def create_property(
     if property_data.photo is not None:
         result = await session.execute(select(Props.column).limit(1))
         key = result.scalar()
-        file_path = GCStorage(key).upload_file(property_data.photo)
+        file_path = GCStorage(key).upload_file(property_data.photo, "image")
 
     
     new_property = Properties(
@@ -77,7 +77,7 @@ async def update_property(
 
     if property_data.photo is not None:
         key = await get_service_account(session)
-        file_path = GCStorage(key).upload_file(property_data.photo)
+        file_path = GCStorage(key).upload_file(property_data.photo, "image")
         existing_property.foto = file_path
 
     existing_property.apelido = property_data.nickname if property_data.nickname is not None else existing_property.apelido

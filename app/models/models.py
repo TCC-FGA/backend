@@ -238,6 +238,7 @@ class Contract(Base):
     taxa_reajuste: Mapped[enumerate] = mapped_column(
         Enum("IGPM", name="taxa_reajuste"), nullable=True
     )
+    pdf_assinado: Mapped[str] = mapped_column(String(256), nullable=True)
     casa_id: Mapped[int] = mapped_column(ForeignKey("casas.id"), nullable=False)
     template_id: Mapped[int] = mapped_column(ForeignKey("template.id"), nullable=False)
     inquilino_id: Mapped[int] = mapped_column(
@@ -254,6 +255,7 @@ class Contract(Base):
     casas: Mapped["Houses"] = relationship("Houses", back_populates="contratos")
     inquilino: Mapped["Tenant"] = relationship("Tenant", back_populates="contratos")
     user: Mapped["Owner"] = relationship("Owner", back_populates="contratos")
+    vistorias: Mapped["Inspection"] = relationship("Inspection", back_populates="contratos")
 
 
 class PaymentInstallment(Base):
@@ -275,3 +277,14 @@ class PaymentInstallment(Base):
     __table_args__ = (
         UniqueConstraint("data_vencimento", "contrato_id", name="uq_data_vencimento_contrato_id"),
     )
+
+class Inspection(Base):
+    __tablename__ = "vistoria"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    observacao: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    data_vistoria: Mapped[date] = mapped_column(Date, nullable=False)
+    contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
+
+    contratos: Mapped["Contract"] = relationship("Contract", back_populates="vistorias")
+

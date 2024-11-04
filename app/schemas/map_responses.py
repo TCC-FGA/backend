@@ -99,7 +99,9 @@ def map_template_to_response(template: Template) -> TemplateResponse:
     )
 
 
-def map_contract_to_response(contract: Contract) -> ContractResponse:
+def map_contract_to_response(
+    contract: Contract, house: Houses, tenant: Tenant
+) -> ContractResponse:
     return ContractResponse(
         id=contract.id,
         deposit_value=contract.valor_caucao,
@@ -108,10 +110,40 @@ def map_contract_to_response(contract: Contract) -> ContractResponse:
         base_value=contract.valor_base,
         due_date=contract.dia_vencimento,
         reajustment_rate=str(contract.taxa_reajuste),
+        signed_pdf=contract.pdf_assinado,
         house_id=contract.casa_id,
         template_id=contract.template_id,
         tenant_id=contract.inquilino_id,
         user_id=contract.user_id,
+        house=HouseResponse(
+            id=house.id,
+            property_id=house.propriedade_id,
+            photo=house.foto,
+            nickname=house.apelido,
+            room_count=house.qtd_comodos,
+            bathrooms=house.banheiros,
+            furnished=house.mobiliada,
+            status=str(house.status),
+        ),
+        tenant=TenantResponse(
+            id=tenant.id,
+            cpf=tenant.cpf,
+            contact=tenant.contato,
+            email=tenant.email,
+            name=tenant.nome,
+            profession=tenant.profissao,
+            marital_status=tenant.estado_civil,
+            birth_date=tenant.data_nascimento,
+            emergency_contact=tenant.contato_emergencia,
+            income=tenant.renda,
+            residents=tenant.num_residentes,
+            street=tenant.rua,
+            neighborhood=tenant.bairro,
+            number=tenant.numero,
+            zip_code=tenant.cep,
+            city=tenant.cidade,
+            state=tenant.estado,
+        ),
     )
 
 
