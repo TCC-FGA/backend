@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import File, Form, UploadFile
-from pydantic import BaseModel, EmailStr, Field, field_validator
-from datetime import datetime, date
+from pydantic import BaseModel, EmailStr
+from datetime import date
 from enum import Enum
 
 
@@ -365,3 +365,154 @@ class PaymentInstallmentUpdateRequest(BaseModel):
     fg_paid: bool
     payment_type: PaymentType
     payment_date: date
+
+
+# Inspection
+class EstadoPintura(str, Enum):
+    nova = "Nova"
+    bom_estado = "Em bom estado"
+    com_defeitos = "Com alguns defeitos"
+
+
+class TipoTinta(str, Enum):
+    acrilica = "acrílica"
+    latex = "latex"
+
+
+class CondicaoEletrica(str, Enum):
+    funcionando = "Funcionando"
+    problemas = "Com problemas"
+    desligada = "Desligada"
+
+
+class Pintura(BaseModel):
+    estado_pintura: EstadoPintura
+    tipo_tinta: TipoTinta
+    cor: Optional[str] = None
+
+
+class Acabamento(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class Eletrica(BaseModel):
+    condicao: CondicaoEletrica
+    observacoes: Optional[str] = None
+
+
+class TrincosFechaduras(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class PisoAzulejos(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class VidracariaJanelas(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class Telhado(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class Hidraulica(BaseModel):
+    condicao: Optional[str] = None
+    observacoes: Optional[str] = None
+
+
+class Mobilia(BaseModel):
+    observacoes: Optional[str] = None
+
+
+class Chaves(BaseModel):
+    numero: Optional[int] = None
+    observacoes: Optional[str] = None
+
+
+class InspectionCreateRequest(BaseModel):
+    data_vistoria: date
+    pintura: Optional[Pintura] = None
+    acabamento: Optional[Acabamento] = None
+    eletrica: Optional[Eletrica] = None
+    trincos_fechaduras: Optional[TrincosFechaduras] = None
+    piso_azulejos: Optional[PisoAzulejos] = None
+    vidracaria_janelas: Optional[VidracariaJanelas] = None
+    telhado: Optional[Telhado] = None
+    hidraulica: Optional[Hidraulica] = None
+    mobilia: Optional[Mobilia] = None
+    chave: Optional[Chaves] = None
+
+    @classmethod
+    def as_form(
+        cls,
+        data_vistoria: date = Form(...),
+        estado_pintura: EstadoPintura = Form(...),
+        tipo_tinta: TipoTinta = Form(...),
+        cor: Optional[str] = Form(None),
+        condicao_acabamento: Optional[str] = Form(None),
+        observacoes_acabamento: Optional[str] = Form(None),
+        condicao_eletrica: CondicaoEletrica = Form(...),
+        observacoes_eletrica: Optional[str] = Form(None),
+        condicao_trincos_fechaduras: Optional[str] = Form(None),
+        observacoes_trincos_fechaduras: Optional[str] = Form(None),
+        condicao_piso_azulejos: Optional[str] = Form(None),
+        observacoes_piso_azulejos: Optional[str] = Form(None),
+        condicao_vidracaria_janelas: Optional[str] = Form(None),
+        observacoes_vidracaria_janelas: Optional[str] = Form(None),
+        condicao_telhado: Optional[str] = Form(None),
+        observacoes_telhado: Optional[str] = Form(None),
+        condicao_hidraulica: Optional[str] = Form(None),
+        observacoes_hidraulica: Optional[str] = Form(None),
+        observacoes_mobilia: Optional[str] = Form(None),
+        numero_chaves: Optional[int] = Form(None),
+        observacoes_chaves: Optional[str] = Form(None),
+    ):
+        return cls(
+            data_vistoria=data_vistoria,
+            pintura=Pintura(
+                estado_pintura=estado_pintura,
+                tipo_tinta=tipo_tinta,
+                cor=cor,
+            ),
+            acabamento=Acabamento(
+                condicao=condicao_acabamento,
+                observacoes=observacoes_acabamento,
+            ),
+            eletrica=Eletrica(
+                condicao=condicao_eletrica,
+                observacoes=observacoes_eletrica,
+            ),
+            trincos_fechaduras=TrincosFechaduras(
+                condicao=condicao_trincos_fechaduras,
+                observacoes=observacoes_trincos_fechaduras,
+            ),
+            piso_azulejos=PisoAzulejos(
+                condicao=condicao_piso_azulejos,
+                observacoes=observacoes_piso_azulejos,
+            ),
+            vidracaria_janelas=VidracariaJanelas(
+                condicao=condicao_vidracaria_janelas,
+                observacoes=observacoes_vidracaria_janelas,
+            ),
+            telhado=Telhado(
+                condicao=condicao_telhado,
+                observacoes=observacoes_telhado,
+            ),
+            hidraulica=Hidraulica(
+                condicao=condicao_hidraulica,
+                observacoes=observacoes_hidraulica,
+            ),
+            mobilia=Mobilia(
+                observacoes=observacoes_mobilia,
+            ),
+            chave=Chaves(
+                numero=numero_chaves,
+                observacoes=observacoes_chaves,
+            ),
+        )

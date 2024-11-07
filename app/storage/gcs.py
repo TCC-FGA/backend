@@ -24,3 +24,14 @@ class GCStorage:
         blob = bucket.blob(file_path)
         blob.upload_from_file(file.file, content_type=content_type)
         return f"https://storage.googleapis.com/{self.bucket_name}/{file_path}"
+
+    def upload_content(self, file, type):
+        content_type = self.file_type[type]
+        if type == "image":
+            file_path = self.base_path + self.unique_id + (self.date)
+        elif type == "pdf":
+            file_path = self.base_path + "contratos/" + self.unique_id + (self.date)
+        bucket = self.storage_client.get_bucket(self.bucket_name)
+        blob = bucket.blob(file_path)
+        blob.upload_from_file(file, content_type=content_type)
+        return f"https://storage.googleapis.com/{self.bucket_name}/{file_path}"

@@ -8,6 +8,7 @@ from app.models.models import (
     Expenses,
     Guarantor,
     PaymentInstallment,
+    Inspection,
 )
 from app.schemas.responses import (
     HouseResponse,
@@ -19,6 +20,7 @@ from app.schemas.responses import (
     ExpenseResponse,
     GuarantorResponse,
     PaymentInstallmentResponse,
+    InspectionResponse,
 )
 
 
@@ -190,4 +192,14 @@ def map_payment_installment_to_response(
         due_date=payment_installment.data_vencimento,
         payment_date=payment_installment.data_pagamento,
         contract_id=payment_installment.contrato_id,
+    )
+
+
+def map_inspection_to_response(inspection: Inspection) -> InspectionResponse:
+    return InspectionResponse(
+        id=inspection.id,
+        pdf_inspection=inspection.pdf_vistoria,
+        signed_pdf=inspection.pdf_assinado,
+        inspection_date=inspection.data_vistoria,
+        contract_id=inspection.contrato_id,
     )

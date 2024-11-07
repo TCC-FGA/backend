@@ -46,7 +46,7 @@ class Address:
     estado: Mapped[str] = mapped_column(String(2), nullable=True)
 
 
-class Owner(Base):
+class Owner(Base, Address):
     __tablename__ = "conta_usuario"
 
     user_id: Mapped[str] = mapped_column(
@@ -282,7 +282,8 @@ class Inspection(Base):
     __tablename__ = "vistoria"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    observacao: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    pdf_vistoria: Mapped[str] = mapped_column(String(256), nullable=True)
+    pdf_assinado: Mapped[str] = mapped_column(String(256), nullable=True)
     data_vistoria: Mapped[date] = mapped_column(Date, nullable=False)
     contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
 

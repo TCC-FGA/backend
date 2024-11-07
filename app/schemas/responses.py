@@ -153,6 +153,7 @@ class GuarantorResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class PaymentInstallmentResponse(BaseModel):
     id: int
     installment_value: float
@@ -160,6 +161,17 @@ class PaymentInstallmentResponse(BaseModel):
     payment_type: Optional[str]
     due_date: date
     payment_date: Optional[date]
+    contract_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class InspectionResponse(BaseModel):
+    id: int
+    pdf_inspection: str
+    signed_pdf: Optional[str]
+    inspection_date: date
     contract_id: int
 
     class Config:
