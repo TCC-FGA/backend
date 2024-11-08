@@ -24,6 +24,12 @@ async def test_register_new_user_status_code(
             "hashed_signature": "hashed_signature",
             "cpf": "12345678901",
             "birth_date": "1990-01-01",
+            "street": "Test Street",
+            "neighborhood": "Test Neighborhood",
+            "number": 123,
+            "zip_code": "12345678",
+            "city": "Test City",
+            "state": "DF",            
         },
     )
 
@@ -45,6 +51,12 @@ async def test_register_new_user_creates_record_in_db(
             "cpf": "12345678901",
             "birth_date": "1990-01-01",
             "hashed_signature": "hashed_signature",
+            "street": "Test Street",
+            "neighborhood": "Test Neighborhood",
+            "number": 123,
+            "zip_code": "12345678",
+            "city": "Test City",
+            "state": "DF",
         },
     )
 
@@ -67,6 +79,12 @@ async def test_register_new_user_cannot_create_already_created_user(
         cpf="12345678901",
         assinatura_hash="hashed_signature",
         data_nascimento=date(1990, 1, 1),
+        rua="Test Street",
+        bairro="Test Neighborhood",
+        numero=123,
+        cep="12345678",
+        cidade="Test City",
+        estado="DF",
     )
     session.add(user)
     await session.commit()
@@ -82,6 +100,12 @@ async def test_register_new_user_cannot_create_already_created_user(
             "cpf": "12345678901",
             "birth_date": "1990-01-01",
             "hashed_signature": "hashed_signature",
+            "street": "Test Street",
+            "neighborhood": "Test Neighborhood",
+            "number": 123,
+            "zip_code": "12345678",
+            "city": "Test City",
+            "state": "DF",
         },
     )
 

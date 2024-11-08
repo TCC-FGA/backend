@@ -186,6 +186,12 @@ async def register_new_user(
                 assinatura_hash=new_user.hashed_signature,
                 cpf=new_user.cpf,
                 data_nascimento=new_user.birth_date,
+                rua=new_user.street,
+                bairro=new_user.neighborhood,
+                numero=new_user.number,
+                cep=new_user.zip_code,
+                cidade=new_user.city,
+                estado=new_user.state,
             )
         
         session.add(user)

@@ -43,6 +43,14 @@ class UserCreateRequest(BaseRequest):
     hashed_signature: Optional[str] = None
     cpf: str
     birth_date: date
+    profession: Optional[str] = None
+    marital_status: Optional[str] = None
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: str
+    city: Optional[str] = None
+    state: Optional[str] = None
 
 
 class PropertyCreateRequest(BaseModel):

@@ -137,6 +137,14 @@ async def fixture_default_user(
         assinatura_hash="hashed_signature",
         cpf=default_user_cpf,
         data_nascimento=default_user_birth_date,
+        profissao="Engineer",
+        estado_civil="solteiro",
+        rua="Rua Teste",
+        bairro="Bairro Teste",
+        numero=1,
+        cep="11111-111",
+        cidade="Cidade Teste",
+        estado="DF",        
     )
     session.add(default_user)
     await session.commit()

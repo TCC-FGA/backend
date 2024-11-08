@@ -1,6 +1,7 @@
 from datetime import date
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from typing import List, Optional
+from fastapi.responses import Response
 
 
 class BaseResponse(BaseModel):
@@ -24,6 +25,15 @@ class UserResponse(BaseResponse):
     birth_date: date
     name: str
     photo: Optional[str]
+    profession: Optional[str]
+    marital_status: Optional[str]
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
 
     class Config:
         from_attributes = True
@@ -176,3 +186,12 @@ class InspectionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PDFResponse(Response):
+    media_type = "application/pdf"
+
+    def __init__(self, content: bytes, filename: str = "document.pdf", *args, **kwargs):
+        headers = kwargs.get("headers", {})
+        headers["Content-Disposition"] = f'inline; filename="{filename}"'
+        super().__init__(content=content, headers=headers, *args, **kwargs)  # type: ignore

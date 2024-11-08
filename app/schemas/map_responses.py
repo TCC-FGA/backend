@@ -50,6 +50,14 @@ def map_user_to_response(user: Owner) -> UserResponse:
         birth_date=user.data_nascimento,
         name=user.nome,
         photo=user.foto,
+        profession=user.profissao,
+        marital_status=user.estado_civil,
+        street=user.rua,
+        neighborhood=user.bairro,
+        number=user.numero,
+        zip_code=user.cep,
+        city=user.cidade,
+        state=user.estado,
     )
 
 
