@@ -188,6 +188,35 @@ class InspectionResponse(BaseModel):
         from_attributes = True
 
 
+class DashboardResponse(BaseModel):
+    class Totals(BaseModel):
+        total_properties: int
+        total_houses: int
+        total_tenants: int
+
+    class CashFlow(BaseModel):
+        total_monthly_income: float
+        total_monthly_expenses: float
+        total_profit_monthly: float
+
+    class HousesAvailability(BaseModel):
+        total_rented: int
+        total_available: int
+        total_maintenance: int
+    
+    class PaymentStatus(BaseModel):
+        total_monthly_paid: float
+        total_monthly_overdue: float
+        total_monthly_pending: float
+
+    totals: Optional[Totals]
+    cash_flow: Optional[CashFlow]
+    houses_availability: Optional[HousesAvailability]
+    payment_status: Optional[PaymentStatus]
+
+    class Config:
+        from_attributes = True
+
 class PDFResponse(Response):
     media_type = "application/pdf"
 
