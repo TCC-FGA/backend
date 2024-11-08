@@ -46,7 +46,7 @@ class Address:
     estado: Mapped[str] = mapped_column(String(2), nullable=True)
 
 
-class Owner(Base):
+class Owner(Base, Address):
     __tablename__ = "conta_usuario"
 
     user_id: Mapped[str] = mapped_column(
@@ -58,7 +58,9 @@ class Owner(Base):
     )
     telefone: Mapped[str] = mapped_column(String(20), nullable=False)
     nome: Mapped[str] = mapped_column(String(100), nullable=False)
-    assinatura_hash: Mapped[str] = mapped_column(String(128), nullable=True)
+    estado_civil: Mapped[str] = mapped_column(String(50), nullable=True)
+    profissao: Mapped[str] = mapped_column(String(100), nullable=True)
+    assinatura_hash: Mapped[str] = mapped_column(Text, nullable=True)
     data_nascimento: Mapped[date] = mapped_column(Date, nullable=False)
     cpf: Mapped[str] = mapped_column(String(11), nullable=False)
     senha_hash: Mapped[str] = mapped_column(String(128), nullable=False)
@@ -282,7 +284,8 @@ class Inspection(Base):
     __tablename__ = "vistoria"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    observacao: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    pdf_vistoria: Mapped[str] = mapped_column(String(256), nullable=True)
+    pdf_assinado: Mapped[str] = mapped_column(String(256), nullable=True)
     data_vistoria: Mapped[date] = mapped_column(Date, nullable=False)
     contrato_id: Mapped[int] = mapped_column(ForeignKey("contrato.id"), nullable=False)
 

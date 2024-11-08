@@ -1,6 +1,7 @@
 from datetime import date
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from typing import List, Optional
+from fastapi.responses import Response
 
 
 class BaseResponse(BaseModel):
@@ -24,6 +25,15 @@ class UserResponse(BaseResponse):
     birth_date: date
     name: str
     photo: Optional[str]
+    profession: Optional[str]
+    marital_status: Optional[str]
+
+    street: Optional[str]
+    neighborhood: Optional[str]
+    number: Optional[int]
+    zip_code: str
+    city: Optional[str]
+    state: Optional[str]
 
     class Config:
         from_attributes = True
@@ -153,6 +163,7 @@ class GuarantorResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class PaymentInstallmentResponse(BaseModel):
     id: int
     installment_value: float
@@ -164,3 +175,52 @@ class PaymentInstallmentResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class InspectionResponse(BaseModel):
+    id: int
+    pdf_inspection: str
+    signed_pdf: Optional[str]
+    inspection_date: date
+    contract_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class DashboardResponse(BaseModel):
+    class Totals(BaseModel):
+        total_properties: int
+        total_houses: int
+        total_tenants: int
+
+    class CashFlow(BaseModel):
+        total_monthly_income: float
+        total_monthly_expenses: float
+        total_profit_monthly: float
+
+    class HousesAvailability(BaseModel):
+        total_rented: int
+        total_available: int
+        total_maintenance: int
+    
+    class PaymentStatus(BaseModel):
+        total_monthly_paid: float
+        total_monthly_overdue: float
+        total_monthly_pending: float
+
+    totals: Optional[Totals]
+    cash_flow: Optional[CashFlow]
+    houses_availability: Optional[HousesAvailability]
+    payment_status: Optional[PaymentStatus]
+
+    class Config:
+        from_attributes = True
+
+class PDFResponse(Response):
+    media_type = "application/pdf"
+
+    def __init__(self, content: bytes, filename: str = "document.pdf", *args, **kwargs):
+        headers = kwargs.get("headers", {})
+        headers["Content-Disposition"] = f'inline; filename="{filename}"'
+        super().__init__(content=content, headers=headers, *args, **kwargs)  # type: ignore
