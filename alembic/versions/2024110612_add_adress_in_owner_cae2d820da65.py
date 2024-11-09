@@ -25,7 +25,7 @@ def upgrade() -> None:
     op.add_column('conta_usuario', sa.Column('rua', sa.String(length=255), nullable=True))
     op.add_column('conta_usuario', sa.Column('bairro', sa.String(length=255), nullable=True))
     op.add_column('conta_usuario', sa.Column('numero', sa.Integer(), nullable=True))
-    op.add_column('conta_usuario', sa.Column('cep', sa.String(length=9), nullable=False))
+    op.add_column('conta_usuario', sa.Column('cep', sa.String(length=9), nullable=True))
     op.add_column('conta_usuario', sa.Column('cidade', sa.String(length=255), nullable=True))
     op.add_column('conta_usuario', sa.Column('estado', sa.String(length=2), nullable=True))
     op.add_column('vistoria', sa.Column('pdf_vistoria', sa.String(length=256), nullable=True))
