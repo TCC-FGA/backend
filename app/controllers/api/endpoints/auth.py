@@ -186,6 +186,8 @@ async def register_new_user(
                 assinatura_hash=new_user.hashed_signature,
                 cpf=new_user.cpf,
                 data_nascimento=new_user.birth_date,
+                profissao=new_user.profession,
+                estado_civil=new_user.marital_status,
                 rua=new_user.street,
                 bairro=new_user.neighborhood,
                 numero=new_user.number,
