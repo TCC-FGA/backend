@@ -41,7 +41,7 @@ class Address:
     rua: Mapped[str] = mapped_column(String(255), nullable=True)
     bairro: Mapped[str] = mapped_column(String(255), nullable=True)
     numero: Mapped[int] = mapped_column(Integer, nullable=True)
-    cep: Mapped[str] = mapped_column(String(9), nullable=False, server_default="00000-000")
+    cep: Mapped[str] = mapped_column(String(9), nullable=True, server_default="72000-000")
     cidade: Mapped[str] = mapped_column(String(255), nullable=True)
     estado: Mapped[str] = mapped_column(String(2), nullable=True)
 
