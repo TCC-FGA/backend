@@ -26,7 +26,7 @@ def upgrade() -> None:
                existing_nullable=True)
     op.alter_column('conta_usuario', 'cep',
                existing_type=sa.VARCHAR(length=9),
-               nullable=False)
+               nullable=True)
     # ### end Alembic commands ###
 
 
