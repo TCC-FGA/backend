@@ -306,6 +306,12 @@ async def generate_contract_pdf(
     else:
         guarantor = None
 
+    if template.garantia == "fiador" and guarantor is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=api_messages.GUARANTOR_NOT_FOUND,
+        )
+
     try:
         html_template = f"""
         <html><head><title>Contrato de Aluguel&#160;</title>
@@ -393,4 +399,4 @@ async def generate_contract_pdf(
         return PDFResponse(content=pdf, filename=f"Contrato_Aluguel.pdf")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao gerar PDF: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar PDF: {e} algum campo obrigatório está nulo.")

@@ -21,7 +21,44 @@ class UserUpdatePasswordRequest(BaseRequest):
 class UserUpdateRequest(BaseModel):
     telephone: Optional[str] = None
     name: Optional[str] = None
+    marital_status: Optional[str] = None
+    profession: Optional[str] = None
     hashed_signature: Optional[str] = None
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+
+    @classmethod
+    def as_form(
+        cls,
+        telephone: str = Form(None),
+        name: str = Form(None),
+        marital_status: str = Form(None),
+        profession: str = Form(None),
+        hashed_signature: str = Form(None),
+        street: str = Form(None),
+        neighborhood: str = Form(None),
+        number: int = Form(None),
+        zip_code: str = Form(None),
+        city: str = Form(None),
+        state: str = Form(None),
+    ):
+        return cls(
+            telephone=telephone,
+            name=name,
+            marital_status=marital_status,
+            profession=profession,
+            hashed_signature=hashed_signature,
+            street=street,
+            neighborhood=neighborhood,
+            number=number,
+            zip_code=zip_code,
+            city=city,
+            state=state,
+        )
 
 
 class PasswordResetRequest(BaseModel):
