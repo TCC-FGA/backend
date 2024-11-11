@@ -10,6 +10,7 @@ from app.core.config import get_settings
 from app.core.security.jwt import generate_reset_token, verify_reset_token
 from app.core.security.password import get_password_hash
 from app.models.models import Owner as User
+from app.models.models import Props
 from app.schemas.map_responses import map_user_to_response
 from app.schemas.requests import (
     UserUpdatePasswordRequest,
@@ -33,8 +34,7 @@ async def read_current_user(
 
 @router.patch("/me", response_model=UserResponse, description="Update current user")
 async def update_current_user(
-    user_photo: UploadFile = File(None),
-    user_data: UserUpdateRequest = Depends(UserUpdateRequest.as_form),
+    user_data: UserUpdateRequest,
     current_user: User = Depends(deps.get_current_user),
     session: AsyncSession = Depends(deps.get_session),
 ) -> UserResponse:
@@ -46,11 +46,6 @@ async def update_current_user(
 
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-
-    if user_photo is not None:
-        key = await get_service_account(session)
-        file_path = GCStorage(key).upload_file(user_photo, "image")
-        user.foto = file_path
 
     user.telefone = (
         user_data.telephone if user_data.telephone is not None else user.telefone
@@ -82,6 +77,41 @@ async def update_current_user(
     await session.refresh(user)
 
     return map_user_to_response(current_user)
+
+
+@router.patch(
+    "/me/photo",
+    response_model=UserResponse,
+    description="Update current user photo",
+)
+async def update_current_user_photo(
+    file: UploadFile = File(...),
+    current_user: User = Depends(deps.get_current_user),
+    session: AsyncSession = Depends(deps.get_session),
+) -> UserResponse:
+
+    if file is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=api_messages.ERROR_UPLOADING_FILE,
+        )
+
+    try:
+        key = await session.execute(select(Props.column).limit(1))
+        key_response = key.scalar_one_or_none()
+        file_path = GCStorage(key_response).upload_file(file, "image")
+        current_user.foto = file_path
+
+        session.add(current_user)
+        await session.commit()
+        await session.refresh(current_user)
+        return map_user_to_response(current_user)
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"{api_messages.ERROR_UPLOADING_FILE}: {str(e)}",
+        )
 
 
 @router.delete(
