@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/guarantor{tenant_id}",
+    "/guarantor/{tenant_id}",
     response_model=GuarantorResponse,
     description="Get the guarantor by id of the tenant",
 )
@@ -40,7 +40,7 @@ async def get_guarantor_by_tenant_id(
 
 
 @router.post(
-    "/guarantor{tenant_id}",
+    "/guarantor/{tenant_id}",
     response_model=GuarantorResponse,
     description="Create a new guarantor for the tenant",
     status_code=status.HTTP_201_CREATED,
