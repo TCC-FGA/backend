@@ -21,7 +21,15 @@ class UserUpdatePasswordRequest(BaseRequest):
 class UserUpdateRequest(BaseModel):
     telephone: Optional[str] = None
     name: Optional[str] = None
+    marital_status: Optional[str] = None
+    profession: Optional[str] = None
     hashed_signature: Optional[str] = None
+    street: Optional[str] = None
+    neighborhood: Optional[str] = None
+    number: Optional[int] = None
+    zip_code: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
 
 
 class PasswordResetRequest(BaseModel):

@@ -3,6 +3,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta, date
 from dateutil.relativedelta import relativedelta
+from decimal import Decimal
 
 import app.controllers.api.api_messages as api_messages
 from app.controllers.api import deps
@@ -53,14 +54,18 @@ async def create_payment_installment(
 
     try:
         parcelas = []
-
         data_inicio = contract.data_inicio.replace(day=contract.dia_vencimento)
+        valor_parcela = Decimal(contract.valor_base)
 
         for i in range(contract_duration):
             data_vencimento_parcela = data_inicio + relativedelta(months=i + 1)
+
+            if contract.taxa_reajuste == "IGPM" and i > 0 and i % 12 == 0:
+                valor_parcela *= Decimal("1.045")
+
             new_payment_installment = PaymentInstallment(
                 contrato_id=contract.id,
-                valor_parcela=contract.valor_base,
+                valor_parcela=valor_parcela.quantize(Decimal("0.01")),
                 fg_pago=False,
                 tipo_pagamento=None,
                 data_vencimento=data_vencimento_parcela,
@@ -77,7 +82,8 @@ async def create_payment_installment(
     except Exception as e:
         await session.rollback()
         raise HTTPException(
-            status_code=400, detail=api_messages.ERROR_CREATING_PAYMENT_INSTALLMENT
+            status_code=400,
+            detail=f"{api_messages.ERROR_CREATING_PAYMENT_INSTALLMENT}: {str(e)}",
         )
 
     return [map_payment_installment_to_response(parcela) for parcela in parcelas]

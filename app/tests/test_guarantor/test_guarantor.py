@@ -31,7 +31,7 @@ async def test_create_guarantor(
     }
 
     response = await client.post(
-        f"/guarantor{tenant_id}", json=guarantor_data, headers=default_user_headers
+        f"/guarantor/{tenant_id}", json=guarantor_data, headers=default_user_headers
     )
     assert response.status_code == status.HTTP_201_CREATED
     json_response = response.json()
@@ -70,7 +70,7 @@ async def test_get_guarantor_by_tenant_id(
     await session.refresh(guarantor)
 
     response = await client.get(
-        f"/guarantor{default_tenant.id}", headers=default_user_headers
+        f"/guarantor/{default_tenant.id}", headers=default_user_headers
     )
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
