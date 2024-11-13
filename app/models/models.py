@@ -291,3 +291,7 @@ class Inspection(Base):
 
     contratos: Mapped["Contract"] = relationship("Contract", back_populates="vistorias")
 
+    __table_args__ = (
+        UniqueConstraint("contrato_id", name="uq_vistoria_contrato_id"),
+    )
+
