@@ -31,6 +31,7 @@ from app.storage.gcs import GCStorage
 
 router = APIRouter()
 
+
 @router.get(
     "/inspection/{contract_id}",
     response_model=InspectionResponse,
@@ -57,6 +58,7 @@ async def get_inspection(
         )
 
     return map_inspection_to_response(inspection)
+
 
 @router.post(
     "/inspection/{contract_id}",
@@ -90,6 +92,11 @@ async def create_inspection(
             detail=api_messages.CONTRACT_NOT_FOUND,
         )
 
+    existing_inspection_result = await session.execute(
+        select(Inspection).where(Inspection.contrato_id == contract_id)
+    )
+    existing_inspection = existing_inspection_result.scalar_one_or_none()
+
     contract, property, tenant = contract
 
     pdf_created = create_inspection_pdf(
@@ -107,11 +114,18 @@ async def create_inspection(
     with open(pdf_created, "rb") as file:
         pdf_vistoria = gcs.upload_content(file, "pdf")
 
-    inspection = Inspection(
-        contrato_id=contract_id,
-        pdf_vistoria=pdf_vistoria,
-        data_vistoria=inspection_data.data_vistoria,
-    )
+    if existing_inspection:
+        existing_inspection.pdf_vistoria = pdf_vistoria
+        existing_inspection.data_vistoria = inspection_data.data_vistoria
+
+        inspection = existing_inspection
+
+    else:
+        inspection = Inspection(
+            contrato_id=contract_id,
+            pdf_vistoria=pdf_vistoria,
+            data_vistoria=inspection_data.data_vistoria,
+        )
 
     session.add(inspection)
     await session.commit()
@@ -318,7 +332,7 @@ def create_inspection_pdf(
                 photo_table_data.append(photo_row)
                 photo_row = []
             else:
-                photo_row.append(Spacer(1, espaco_entre_fotos)) #type: ignore
+                photo_row.append(Spacer(1, espaco_entre_fotos))  # type: ignore
 
         if photo_row:
             photo_table_data.append(photo_row)
