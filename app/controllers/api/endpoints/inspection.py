@@ -289,7 +289,7 @@ def create_inspection_pdf(
 
     content.append(
         Paragraph(
-            "Qualquer impugnação ao presente laudo deverá ser comunicada ao LOCADOR por escrito, dentro de 07 (sete) dias a contar da data da assinatura deste. destinado ao e-mail {owner.email} A falta de comunicação implica em aceitação de vistoria realizada nos termos descritos acima",
+            f"Qualquer impugnação ao presente laudo deverá ser comunicada ao LOCADOR por escrito, dentro de 07 (sete) dias a contar da data da assinatura deste. destinado ao e-mail {owner.email} A falta de comunicação implica em aceitação de vistoria realizada nos termos descritos acima",
             text_style,
         )
     )
