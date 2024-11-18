@@ -17,8 +17,7 @@ class Security(BaseModel):
     allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
     backend_cors_origins: list[AnyHttpUrl] = []
     email_host: SecretStr
-
-
+    onesignal_api_key: SecretStr
 class Database(BaseModel):
     hostname: str = "postgres"
     username: str = "postgres"

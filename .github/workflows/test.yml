@@ -21,6 +21,7 @@ jobs:
       DATABASE__PASSWORD: postgres
       DATABASE_URL: postgresql://postgres:postgres@localhost/my_test_db
       SECURITY__EMAIL_HOST: ${{ secrets.SECURITY__EMAIL_HOST }}
+      SECURITY__ONESIGNAL_API_KEY: "not-secret"
 
     services:
       postgres_db:
