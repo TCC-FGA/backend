@@ -41,7 +41,9 @@ class Address:
     rua: Mapped[str] = mapped_column(String(255), nullable=True)
     bairro: Mapped[str] = mapped_column(String(255), nullable=True)
     numero: Mapped[int] = mapped_column(Integer, nullable=True)
-    cep: Mapped[str] = mapped_column(String(9), nullable=True, server_default="72000-000")
+    cep: Mapped[str] = mapped_column(
+        String(9), nullable=True, server_default="72000-000"
+    )
     cidade: Mapped[str] = mapped_column(String(255), nullable=True)
     estado: Mapped[str] = mapped_column(String(2), nullable=True)
 
@@ -78,6 +80,7 @@ class Owner(Base, Address):
     templates: Mapped[list["Template"]] = relationship(
         "Template", back_populates="user", cascade="all, delete-orphan"
     )
+
 
 class RefreshToken(Base):
     __tablename__ = "refresh_token"
@@ -251,13 +254,15 @@ class Contract(Base):
     )
 
     parcelas: Mapped[list["PaymentInstallment"]] = relationship(
-        "PaymentInstallment", back_populates="contratos"
+        "PaymentInstallment", back_populates="contratos", cascade="all, delete-orphan"
     )
     template: Mapped["Template"] = relationship("Template", back_populates="contratos")
     casas: Mapped["Houses"] = relationship("Houses", back_populates="contratos")
     inquilino: Mapped["Tenant"] = relationship("Tenant", back_populates="contratos")
     user: Mapped["Owner"] = relationship("Owner", back_populates="contratos")
-    vistorias: Mapped["Inspection"] = relationship("Inspection", back_populates="contratos")
+    vistorias: Mapped["Inspection"] = relationship(
+        "Inspection", back_populates="contratos"
+    )
 
 
 class PaymentInstallment(Base):
@@ -277,8 +282,11 @@ class PaymentInstallment(Base):
     contratos: Mapped["Contract"] = relationship("Contract", back_populates="parcelas")
 
     __table_args__ = (
-        UniqueConstraint("data_vencimento", "contrato_id", name="uq_data_vencimento_contrato_id"),
+        UniqueConstraint(
+            "data_vencimento", "contrato_id", name="uq_data_vencimento_contrato_id"
+        ),
     )
+
 
 class Inspection(Base):
     __tablename__ = "vistoria"
@@ -291,7 +299,4 @@ class Inspection(Base):
 
     contratos: Mapped["Contract"] = relationship("Contract", back_populates="vistorias")
 
-    __table_args__ = (
-        UniqueConstraint("contrato_id", name="uq_vistoria_contrato_id"),
-    )
-
+    __table_args__ = (UniqueConstraint("contrato_id", name="uq_vistoria_contrato_id"),)

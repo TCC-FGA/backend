@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from weasyprint import HTML  # type: ignore
 from datetime import datetime
 import matplotlib.pyplot as plt
-import pandas as pd # type: ignore
+import pandas as pd  # type: ignore
 import uuid
 import os
 
@@ -41,10 +41,12 @@ async def generate_report(
     current_year = datetime.now().year
     try:
         payments_last_year = await session.execute(
-            select(func.sum(PaymentInstallment.valor_parcela)).where(
+            select(func.sum(PaymentInstallment.valor_parcela))
+            .join(Contract, PaymentInstallment.contrato_id == Contract.id)
+            .where(
                 extract("year", PaymentInstallment.data_vencimento) == current_year,
                 PaymentInstallment.fg_pago == True,
-                PaymentInstallment.contratos.has(user_id=current_user.user_id),
+                Contract.user_id == current_user.user_id,
             )
         )
         total_payments_last_year = float(payments_last_year.scalar() or 0)
@@ -62,8 +64,8 @@ async def generate_report(
 
         expenses_by_type = await session.execute(
             select(Expenses.tipo_despesa, func.sum(Expenses.valor))
-            .join(Houses)
-            .join(Properties)
+            .join(Houses, Expenses.casa_id == Houses.id)
+            .join(Properties, Houses.propriedade_id == Properties.id)
             .where(
                 extract("year", Expenses.data_despesa) == current_year,
                 Properties.user_id == current_user.user_id,
@@ -124,9 +126,9 @@ async def generate_report(
                 extract("month", PaymentInstallment.data_vencimento).label("month"),
                 func.sum(PaymentInstallment.valor_parcela).label("income"),
             )
-            .join(Contract, Contract.id == PaymentInstallment.contrato_id)
-            .join(Houses, Houses.id == Contract.casa_id)
-            .join(Properties, Properties.id == Houses.propriedade_id)
+            .join(Contract, PaymentInstallment.contrato_id == Contract.id)
+            .join(Houses, Contract.casa_id == Houses.id)
+            .join(Properties, Houses.propriedade_id == Properties.id)
             .where(
                 extract("year", PaymentInstallment.data_vencimento) == current_year,
                 PaymentInstallment.fg_pago == True,
@@ -141,8 +143,8 @@ async def generate_report(
                 extract("month", Expenses.data_despesa).label("month"),
                 func.sum(Expenses.valor).label("expense"),
             )
-            .join(Houses, Houses.id == Expenses.casa_id)
-            .join(Properties, Properties.id == Houses.propriedade_id)
+            .join(Houses, Expenses.casa_id == Houses.id)
+            .join(Properties, Houses.propriedade_id == Properties.id)
             .where(
                 extract("year", Expenses.data_despesa) == current_year,
                 Properties.user_id == current_user.user_id,
@@ -151,16 +153,13 @@ async def generate_report(
         )
         expense_by_month_list = expense_by_month.fetchall()
 
-        # Combinar Receita e Despesa em um único DataFrame
         df_income = pd.DataFrame(income_by_month_list, columns=["month", "income"])
         df_expense = pd.DataFrame(expense_by_month_list, columns=["month", "expense"])
 
-        # Mesclar os DataFrames e preencher valores ausentes com zero
         df_income_expense = pd.merge(
             df_income, df_expense, on="month", how="outer"
         ).fillna(0)
 
-        # Converter colunas para float
         df_income_expense["income"] = df_income_expense["income"].astype(float)
         df_income_expense["expense"] = df_income_expense["expense"].astype(float)
         df_income_expense["month"] = df_income_expense["month"].astype(int)
@@ -198,13 +197,11 @@ async def generate_report(
         plt.savefig(figure_income_expense)
         plt.close()
 
-        # Identificar o tipo de despesa com maior valor
         if not df.empty:
             maior_tipo_despesa = df.loc[df["valor"].idxmax(), "tipo_despesa"]
         else:
             maior_tipo_despesa = "N/A"
 
-        # Identificar o status de imóvel mais comum
         if not df_occupancy.empty:
             status_mais_comum = df_occupancy.loc[
                 df_occupancy["count"].idxmax(), "status"
@@ -271,9 +268,6 @@ async def generate_report(
         """
         pdf = HTML(string=html_template).write_pdf()
 
-        with open ("report.pdf", "wb") as f:
-            f.write(pdf)    
-
         os.remove(figure_expenses)
         os.remove(figure_occupancy)
         os.remove(figure_income_expense)
@@ -281,4 +275,7 @@ async def generate_report(
         return PDFResponse(content=pdf, filename="report.pdf")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao gerar relatório: {e} Cadastre despesas e receitas para o ano corrente.")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao gerar relatório: {e} Cadastre despesas e receitas para o ano corrente.",
+        )
