@@ -261,7 +261,7 @@ class Contract(Base):
     inquilino: Mapped["Tenant"] = relationship("Tenant", back_populates="contratos")
     user: Mapped["Owner"] = relationship("Owner", back_populates="contratos")
     vistorias: Mapped["Inspection"] = relationship(
-        "Inspection", back_populates="contratos"
+        "Inspection", back_populates="contratos", cascade="all, delete-orphan"
     )
 
 
