@@ -153,21 +153,9 @@ async def get_dashboard_payment_status(
 ) -> DashboardResponse.PaymentStatus:
     current_month = date.today().month
     current_year = date.today().year
-    current_day = date.today().day
-
-    total_payments_query = await session.execute(
-        select(func.count(PaymentInstallment.id))
-        .join(Contract, PaymentInstallment.contrato_id == Contract.id)
-        .where(
-            extract("month", PaymentInstallment.data_vencimento) == current_month,
-            extract("year", PaymentInstallment.data_vencimento) == current_year,
-            Contract.user_id == current_user.user_id,
-        )
-    )
-    total_payments = total_payments_query.scalar() or 0
 
     paid_payments_query = await session.execute(
-        select(func.count(PaymentInstallment.id))
+        select(func.sum(PaymentInstallment.valor_parcela))
         .join(Contract, PaymentInstallment.contrato_id == Contract.id)
         .where(
             extract("month", PaymentInstallment.data_vencimento) == current_month,
@@ -179,7 +167,7 @@ async def get_dashboard_payment_status(
     paid_payments = paid_payments_query.scalar() or 0
 
     overdue_payments_query = await session.execute(
-        select(func.count(PaymentInstallment.id))
+        select(func.sum(PaymentInstallment.valor_parcela))
         .join(Contract, PaymentInstallment.contrato_id == Contract.id)
         .where(
             extract("month", PaymentInstallment.data_vencimento) == current_month,
@@ -192,7 +180,7 @@ async def get_dashboard_payment_status(
     overdue_payments = overdue_payments_query.scalar() or 0
 
     pending_payments_query = await session.execute(
-        select(func.count(PaymentInstallment.id))
+        select(func.sum(PaymentInstallment.valor_parcela))
         .join(Contract, PaymentInstallment.contrato_id == Contract.id)
         .where(
             extract("month", PaymentInstallment.data_vencimento) == current_month,
@@ -204,21 +192,10 @@ async def get_dashboard_payment_status(
     )
     pending_payments = pending_payments_query.scalar() or 0
 
-    total_payments = total_payments
-    paid_percentage = (
-        (paid_payments / total_payments) * 100 if total_payments > 0 else 0.0
-    )
-    overdue_percentage = (
-        (overdue_payments / total_payments) * 100 if total_payments > 0 else 0.0
-    )
-    pending_percentage = (
-        (pending_payments / total_payments) * 100 if total_payments > 0 else 0.0
-    )
-
     return DashboardResponse.PaymentStatus(
-        total_monthly_paid=round(paid_percentage, 2),
-        total_monthly_overdue=round(overdue_percentage, 2),
-        total_monthly_pending=round(pending_percentage, 2),
+        total_monthly_paid=round(paid_payments, 2),
+        total_monthly_overdue=round(overdue_payments, 2),
+        total_monthly_pending=round(pending_payments, 2)
     )
 
 
